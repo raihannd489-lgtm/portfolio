@@ -22,7 +22,7 @@ const HeroSection = () => {
             animate={{ y: [0, -15, 0] }}
             transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
           >
-            <img src="WhatsApp Image 2026-04-30 at 2.12.19 PM.jpeg" alt={name} className="profile-img" />
+            <img src="/profile.jpeg" alt={name} className="profile-img" />
             <div className="glow-effect"></div>
           </motion.div>
         </motion.div>
