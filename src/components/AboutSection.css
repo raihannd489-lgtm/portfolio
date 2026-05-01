@@ -146,7 +146,29 @@
 }
 
 @media (max-width: 600px) {
+  .section-title {
+    font-size: 2.2rem;
+  }
+
   .hud-grid {
     grid-template-columns: 1fr;
+  }
+
+  .timeline {
+    padding-left: 20px;
+  }
+
+  .timeline-dot {
+    left: -31px;
+    width: 15px;
+    height: 15px;
+  }
+
+  .timeline-item {
+    padding: 10px 10px 10px 20px;
+  }
+
+  .about-text {
+    padding: 20px;
   }
 }

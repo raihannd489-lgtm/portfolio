@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { portfolioData } from '../data/portfolioData';
 import { FaEnvelope, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
@@ -6,11 +6,31 @@ import './ContactSection.css';
 
 const ContactSection = () => {
   const { references, hero, about } = portfolioData;
+  const [status, setStatus] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // In a real app, integrate with Formspree or EmailJS here
-    alert("This is a mock form submission for now!");
+    setStatus("Sending...");
+    
+    const formData = new FormData(e.target);
+    formData.append("access_key", hero.contactInfo.contactFormKey);
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData
+      });
+      const data = await response.json();
+      
+      if (data.success) {
+        setStatus("Message sent successfully!");
+        e.target.reset();
+      } else {
+        setStatus("Failed to send message. Try again later.");
+      }
+    } catch (error) {
+      setStatus("Error sending message.");
+    }
   };
 
   return (
@@ -37,22 +57,23 @@ const ContactSection = () => {
             <h3>Send a Message</h3>
             <form className="contact-form" onSubmit={handleSubmit}>
               <div className="input-group">
-                <input type="text" required />
+                <input type="text" name="name" required />
                 <label>Name</label>
               </div>
               <div className="input-group">
-                <input type="email" required />
+                <input type="email" name="email" required />
                 <label>Email</label>
               </div>
               <div className="input-group">
-                <input type="text" required />
+                <input type="text" name="subject" required />
                 <label>Subject</label>
               </div>
               <div className="input-group">
-                <textarea required rows="4"></textarea>
+                <textarea name="message" required rows="4"></textarea>
                 <label>Message</label>
               </div>
               <button type="submit" className="submit-btn">Send Message</button>
+              {status && <p className="form-status" style={{ marginTop: '10px', color: 'var(--accent-blue)', fontWeight: 'bold' }}>{status}</p>}
             </form>
           </motion.div>
 

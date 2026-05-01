@@ -114,6 +114,8 @@
   .hero-container {
     flex-direction: column;
     text-align: center;
+    gap: 30px;
+    padding-top: 50px;
   }
   
   .hero-content {
@@ -122,5 +124,26 @@
   
   .name {
     font-size: 3rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .profile-card {
+    width: 250px;
+    height: 330px;
+  }
+
+  .name {
+    font-size: 2.5rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .social-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
   }
 }

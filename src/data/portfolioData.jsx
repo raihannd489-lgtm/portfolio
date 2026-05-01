@@ -8,6 +8,7 @@ export const portfolioData = {
     contactInfo: {
       email: "raihanmahmud20022011@gmail.com", // Replace with actual
       phone: "+880 1774514229", // Replace with actual
+      contactFormKey: "6cb989d1-686d-4b11-89f1-99ec5d874391"
     },
     socialLinks: [
       { id: 1, icon: <FaLinkedin />, url: "https://www.linkedin.com/in/raihan-mahmud-5675a7282/", label: "LinkedIn" },
