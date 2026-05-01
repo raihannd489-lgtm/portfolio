@@ -1,0 +1,284 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.root{display:flex;flex-direction:column;align-items:center;padding:1rem 0 1.5rem;gap:10px;font-family:'Segoe UI',Arial,sans-serif}
+.view-tabs{display:flex;gap:5px;background:var(--color-background-secondary);border-radius:20px;padding:4px}
+.vtab{padding:5px 13px;border-radius:16px;font-size:11px;cursor:pointer;color:var(--color-text-secondary);font-weight:500;transition:all .18s}
+.vtab.on{background:#1B6B4A;color:#fff}
+.phones{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.phone{background:#1a1a1a;border-radius:34px;padding:9px;width:200px;flex-shrink:0}
+.screen{background:#FFF8ED;border-radius:26px;overflow:hidden;display:flex;flex-direction:column;font-family:'Segoe UI',Arial,sans-serif}
+.sbar{background:#1B6B4A;height:17px;display:flex;align-items:center;justify-content:space-between;padding:0 10px}
+.stime{font-size:7.5px;color:#fff;opacity:.9}
+.sdots{display:flex;gap:3px}
+.sd{width:4px;height:4px;border-radius:50%;background:#fff;opacity:.8}
+.note{font-size:11px;color:var(--color-text-tertiary);text-align:center}
+</style>
+
+<h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">ShebaBondhu chat screen — inbox list and live conversation with interactive message sending</h2>
+
+<div class="root">
+  <div class="view-tabs">
+    <div class="vtab on" onclick="setView('inbox')">ইনবক্স</div>
+    <div class="vtab" onclick="setView('chat')">কথোপকথন</div>
+  </div>
+
+  <div class="phones" id="phones"></div>
+  <div class="note" id="viewnote">দুটো screen একসাথে — inbox থেকে chat-এ যাওয়ার flow</div>
+</div>
+
+<script>
+function sbar(t){return`<div class="sbar"><span class="stime">${t}</span><div class="sdots"><div class="sd"></div><div class="sd"></div><div class="sd"></div></div></div>`}
+
+function inboxScreen(){
+  const convos=[
+    {init:'KM',bg:'#FEF3C7',tc:'#92400E',name:'করিম মিস্ত্রী',role:'রাজ মিস্ত্রী',last:'ঠিক আছে স্যার, কাল সকাল ৯টায় আসব।',time:'১০:৪২',unread:0,online:true},
+    {init:'RE',bg:'#EFF6FF',tc:'#0C447C',name:'রহিম ইলেকট্রিশিয়ান',role:'কারেন্ট মিস্ত্রী',last:'ওয়্যারিং এর কাজ ২ দিনে শেষ হবে।',time:'গতকাল',unread:2,online:false},
+    {init:'AH',bg:'#E1F5EE',tc:'#085041',name:'আবুল হোসেন কনস্ট্রাকশন',role:'বিল্ডিং ঠিকাদার',last:'চুক্তির কপি পাঠিয়ে দিয়েছি।',time:'সোম',unread:1,online:false},
+    {init:'SB',bg:'#FBEAF0',tc:'#72243E',name:'সালাম প্লাম্বার',role:'প্লাম্বিং বিশেষজ্ঞ',last:'পাইপটা কোথায় লিক হচ্ছে?',time:'রবি',unread:0,online:false},
+  ];
+  return`
+    ${sbar('১০:৪৫')}
+    <div style="background:#1B6B4A;padding:8px 10px 10px">
+      <div style="font-size:10px;font-weight:500;color:#fff;margin-bottom:7px">বার্তা</div>
+      <div style="background:rgba(255,255,255,.15);border-radius:9px;padding:0 9px;display:flex;align-items:center;gap:6px;height:28px">
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="4" cy="4" r="3" stroke="#9FE1CB" stroke-width="1"/><line x1="6.5" y1="6.5" x2="9" y2="9" stroke="#9FE1CB" stroke-width="1" stroke-linecap="round"/></svg>
+        <span style="font-size:8px;color:rgba(255,255,255,.55)">বার্তা খুঁজুন…</span>
+      </div>
+    </div>
+    <div style="flex:1;background:#FFF8ED">
+      ${convos.map((c,i)=>`
+      <div onclick="setView('chat')" style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:.5px solid #EDE6D8;cursor:pointer;background:${c.unread?'#FFFBF5':'transparent'}">
+        <div style="position:relative;flex-shrink:0">
+          <div style="width:36px;height:36px;border-radius:50%;background:${c.bg};color:${c.tc};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500">${c.init}</div>
+          ${c.online?`<div style="position:absolute;bottom:0;right:0;width:8px;height:8px;border-radius:50%;background:#16A34A;border:1.5px solid #FFF8ED"></div>`:''}
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+            <span style="font-size:9px;font-weight:${c.unread?500:400};color:#222">${c.name}</span>
+            <span style="font-size:7px;color:${c.unread?'#1B6B4A':'#aaa'}">${c.time}</span>
+          </div>
+          <div style="font-size:7px;color:#888;margin-bottom:1px">${c.role}</div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:7.5px;color:${c.unread?'#444':'#aaa'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px">${c.last}</span>
+            ${c.unread?`<span style="background:#1B6B4A;color:#fff;font-size:6.5px;font-weight:500;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 4px">${c.unread}</span>`:''}
+          </div>
+        </div>
+      </div>`).join('')}
+    </div>
+    <div style="background:#fff;border-top:.5px solid #E0D8C8;padding:6px 0 10px;display:flex;justify-content:space-around">
+      ${[['হোম','M2 9L9 3l7 6v7H12v-4H6v4H2V9Z'],['খুঁজুন','M4 4 a3 3 0 1 0 6 0 a3 3 0 1 0 -6 0 M8.5 8.5 L12 12'],['চ্যাট','M1 2h14v10H9l-4 3v-3H1V2Z'],['প্রোফাইল','M6 5 a3 3 0 1 0 6 0 a3 3 0 1 0 -6 0 M2 17c0-3.31 2.69-6 6-6s6 2.69 6 6']].map(([l,p],i)=>`
+        <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="${p}" stroke="${i===2?'#1B6B4A':'#bbb'}" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span style="font-size:6.5px;color:${i===2?'#1B6B4A':'#bbb'};font-weight:${i===2?500:400}">${l}</span>
+        </div>`).join('')}
+    </div>`;
+}
+
+function chatScreen(){
+  const msgs=[
+    {from:'worker',text:'আসসালামুয়ালাইকুম স্যার। আমি করিম মিস্ত্রী। আপনার টাইলসের কাজের জন্য কথা বলছিলাম।',time:'গতকাল ৩:১২'},
+    {from:'user',text:'ওয়ালাইকুম আসালাম। হ্যাঁ, বাথরুমের মেঝের টাইলস বদলাতে হবে।',time:'গতকাল ৩:১৫'},
+    {from:'worker',text:'কত স্কোয়ার ফুট কাজ? আর কোন ধরনের টাইলস চাইছেন?',time:'গতকাল ৩:১৭'},
+    {from:'user',text:'প্রায় ৮০ স্কোয়ার ফুট। সাধারণ মানের সিরামিক হলেই চলবে।',time:'গতকাল ৩:২০'},
+    {from:'worker',isQuote:true,time:'গতকাল ৩:৩৫'},
+    {from:'worker',text:'কাল সকাল ৯টায় একবার দেখে আসতে পারি। কোনো সমস্যা?',time:'গতকাল ৩:৩৭'},
+    {from:'user',text:'ঠিক আছে, কাল সকালে আসুন।',time:'গতকাল ৩:৪০'},
+    {from:'worker',text:'ঠিক আছে স্যার, কাল সকাল ৯টায় আসব।',time:'আজ ১০:৪২'},
+  ];
+
+  const quickReplies=['ঠিক আছে','কতক্ষণ লাগবে?','দাম কত?','কাল আসুন'];
+
+  return`
+    ${sbar('১০:৫০')}
+    <div style="background:#1B6B4A;padding:7px 10px 9px">
+      <div style="display:flex;align-items:center;gap:7px">
+        <div style="width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0" onclick="setView('inbox')">
+          <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M5 1L2 4l3 3" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div style="position:relative;flex-shrink:0">
+          <div style="width:32px;height:32px;border-radius:50%;background:#FEF3C7;color:#92400E;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500">KM</div>
+          <div style="position:absolute;bottom:0;right:0;width:7px;height:7px;border-radius:50%;background:#16A34A;border:1.5px solid #1B6B4A"></div>
+        </div>
+        <div style="flex:1">
+          <div style="font-size:9.5px;font-weight:500;color:#fff">করিম মিস্ত্রী</div>
+          <div style="font-size:7px;color:#9FE1CB">অনলাইন · রাজ মিস্ত্রী · ★★★★★ 4.9</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <div style="width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;cursor:pointer">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 1.5C2 1.5 1 3 2 5s3.5 4.5 5.5 4.5c.8 0 1.3-.4 1.3-.4L7.5 7.5l-1.3.4S4.5 7 4 6.5 2.5 5 3 3.5L2 1.5Z" stroke="#fff" stroke-width=".9" fill="none"/></svg>
+          </div>
+          <div style="width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;cursor:pointer" onclick="sendPrompt('Show the worker profile for Karim Mistry in ShebaBondhu')">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="4" r="2" stroke="#fff" stroke-width=".9"/><path d="M1.5 10c0-2.2 1.8-4 4-4s4 1.8 4 4" stroke="#fff" stroke-width=".9" stroke-linecap="round"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="flex:1;padding:8px 8px 4px;display:flex;flex-direction:column;gap:5px;background:#FFF8ED" id="msgarea">
+      <div style="text-align:center;margin:2px 0 4px">
+        <span style="font-size:7px;color:#aaa;background:#EDE6D8;padding:2px 8px;border-radius:8px">গতকাল</span>
+      </div>
+      ${msgs.map(m=>{
+        if(m.isQuote) return `
+          <div style="display:flex;gap:6px;align-items:flex-end">
+            <div style="width:22px;height:22px;border-radius:50%;background:#FEF3C7;color:#92400E;font-size:8px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0">KM</div>
+            <div style="background:#fff;border-radius:10px;border:.5px solid #E0D8C8;padding:7px 9px;max-width:150px">
+              <div style="font-size:7px;font-weight:500;color:#1B6B4A;margin-bottom:4px">কাজের কোটেশন</div>
+              <div style="display:flex;justify-content:space-between;font-size:7px;color:#555;padding:2px 0;border-bottom:.5px solid #EDE6D8"><span>টাইলস কাজ (৮০ sqft)</span><span style="font-weight:500;color:#222">৳৪,৮০০</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:7px;color:#555;padding:2px 0;border-bottom:.5px solid #EDE6D8"><span>সিমেন্ট ও মশলা</span><span style="font-weight:500;color:#222">৳১,২০০</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:7px;color:#555;padding:2px 0"><span>মোট</span><span style="font-weight:500;color:#1B6B4A">৳৬,০০০</span></div>
+              <div style="display:flex;gap:4px;margin-top:5px">
+                <div style="flex:1;background:#1B6B4A;border-radius:6px;padding:4px;text-align:center;font-size:7px;color:#fff;cursor:pointer">গ্রহণ করুন</div>
+                <div style="flex:1;background:#fff;border:.5px solid #D0C8B8;border-radius:6px;padding:4px;text-align:center;font-size:7px;color:#555;cursor:pointer">দরদাম করুন</div>
+              </div>
+              <div style="font-size:6.5px;color:#aaa;margin-top:3px">${m.time}</div>
+            </div>
+          </div>`;
+
+        if(m.from==='worker') return`
+          <div style="display:flex;gap:6px;align-items:flex-end">
+            <div style="width:22px;height:22px;border-radius:50%;background:#FEF3C7;color:#92400E;font-size:8px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0">KM</div>
+            <div style="max-width:145px">
+              <div style="background:#fff;border-radius:10px;border:.5px solid #E0D8C8;padding:6px 9px;font-size:8px;color:#222;line-height:1.4">${m.text}</div>
+              <div style="font-size:6.5px;color:#bbb;margin-top:2px;padding-left:2px">${m.time}</div>
+            </div>
+          </div>`;
+
+        return`
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:1px">
+            <div style="background:#1B6B4A;border-radius:10px;padding:6px 9px;font-size:8px;color:#fff;line-height:1.4;max-width:145px">${m.text}</div>
+            <div style="display:flex;align-items:center;gap:3px">
+              <span style="font-size:6.5px;color:#bbb">${m.time}</span>
+              <svg width="10" height="7" viewBox="0 0 10 7" fill="none"><path d="M1 3.5l2 2 3-3M5 3.5l2 2 3-3" stroke="#1B6B4A" stroke-width=".9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>`;
+      }).join('')}
+      <div style="text-align:center;margin:2px 0 2px">
+        <span style="font-size:7px;color:#aaa;background:#EDE6D8;padding:2px 8px;border-radius:8px">আজ</span>
+      </div>
+      <div id="dynamic-msgs"></div>
+    </div>
+
+    <div style="background:#fff;border-top:.5px solid #E0D8C8;padding:5px 8px 4px">
+      <div style="display:flex;gap:4px;margin-bottom:5px;overflow:hidden;flex-wrap:wrap">
+        ${quickReplies.map(q=>`<div onclick="sendQuick('${q}')" style="background:#EAF3DE;border:.5px solid #C0DD97;border-radius:12px;padding:3px 9px;font-size:7.5px;color:#27500A;cursor:pointer;white-space:nowrap">${q}</div>`).join('')}
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <div id="attach-btn" onclick="toggleAttach()" style="width:26px;height:26px;border-radius:50%;background:#EAF3DE;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M10.5 5.5l-5 5a3 3 0 01-4.24-4.24l5-5a2 2 0 012.83 2.83L4.09 9.09a1 1 0 01-1.41-1.41L8 2.5" stroke="#1B6B4A" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div style="flex:1;background:#F5F0E8;border-radius:16px;padding:6px 10px;display:flex;align-items:center">
+          <span id="input-placeholder" style="font-size:8px;color:#B0A898;flex:1">বার্তা লিখুন…</span>
+          <span id="input-text" style="font-size:8px;color:#222;flex:1;display:none"></span>
+          <div style="display:flex;gap:4px">
+            <div style="width:18px;height:18px;border-radius:50%;background:#EAF3DE;display:flex;align-items:center;justify-content:center;cursor:pointer">
+              <svg width="9" height="10" viewBox="0 0 9 10" fill="none"><rect x="3" y="1" width="3" height="5" rx="1.5" fill="#1B6B4A"/><path d="M1 5c0 1.93 1.57 3.5 3.5 3.5S8 6.93 8 5" stroke="#1B6B4A" stroke-width=".9" fill="none" stroke-linecap="round"/><line x1="4.5" y1="8.5" x2="4.5" y2="10" stroke="#1B6B4A" stroke-width=".9" stroke-linecap="round"/></svg>
+            </div>
+          </div>
+        </div>
+        <div onclick="doSend()" style="width:30px;height:30px;border-radius:50%;background:#1B6B4A;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1.5 6.5L11.5 1.5L6.5 11.5L5.5 7.5L1.5 6.5Z" fill="#fff" stroke="#fff" stroke-width=".5" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+      <div id="attach-tray" style="display:none;margin-top:6px">
+        <div style="display:flex;gap:6px;justify-content:center">
+          ${[['ছবি','#EFF6FF','#185FA5','M1 10V3h10v7H1Z M4 6l2 2 2-2'],['ফাইল','#FEF3C7','#92400E','M3 1h5l3 3v8H3V1Z M8 1v3h3'],['লোকেশন','#EAF3DE','#27500A','M6.5 1C4.57 1 3 2.57 3 4.5 3 7.25 6.5 11 6.5 11S10 7.25 10 4.5C10 2.57 8.43 1 6.5 1Z M6.5 3a1.5 1.5 0 100 3 1.5 1.5 0 000-3Z'],['কোটেশন','#FBEAF0','#72243E','M2 2h9v9H2V2Z M4 5h5M4 7h3']].map(([l,bg,c,p])=>`
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer">
+            <div style="width:38px;height:38px;border-radius:12px;background:${bg};display:flex;align-items:center;justify-content:center">
+              <svg width="16" height="16" viewBox="0 0 13 13" fill="none"><path d="${p}" stroke="${c}" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+            </div>
+            <span style="font-size:7.5px;color:#555">${l}</span>
+          </div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+}
+
+let attachOpen=false;
+let draftMsgs=[];
+const draftOptions=['ঠিক আছে, কাল আসুন।','খরচটা একটু কমানো যাবে?','কতক্ষণ লাগবে?','ধন্যবাদ!'];
+let draftIdx=0;
+
+function toggleAttach(){
+  attachOpen=!attachOpen;
+  const t=document.getElementById('attach-tray');
+  if(t) t.style.display=attachOpen?'block':'none';
+}
+
+function sendQuick(txt){
+  addUserMsg(txt);
+  setTimeout(()=>addWorkerMsg('জি স্যার, ঠিক আছে!'),800);
+}
+
+function doSend(){
+  const txt=draftOptions[draftIdx%draftOptions.length];
+  draftIdx++;
+  addUserMsg(txt);
+  setTimeout(()=>addWorkerMsg('জি স্যার, বুঝেছি। আর কোনো প্রশ্ন?'),900);
+}
+
+function addUserMsg(txt){
+  const now=nowTime();
+  const d=document.getElementById('dynamic-msgs');
+  if(!d)return;
+  const div=document.createElement('div');
+  div.style.cssText='display:flex;flex-direction:column;align-items:flex-end;gap:1px;margin-bottom:5px';
+  div.innerHTML=`<div style="background:#1B6B4A;border-radius:10px;padding:6px 9px;font-size:8px;color:#fff;line-height:1.4;max-width:145px">${txt}</div><div style="display:flex;align-items:center;gap:3px"><span style="font-size:6.5px;color:#bbb">${now}</span><svg width="10" height="7" viewBox="0 0 10 7" fill="none"><path d="M1 3.5l2 2 3-3M5 3.5l2 2 3-3" stroke="#1B6B4A" stroke-width=".9" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`;
+  d.appendChild(div);
+}
+
+function addWorkerMsg(txt){
+  const now=nowTime();
+  const d=document.getElementById('dynamic-msgs');
+  if(!d)return;
+  const div=document.createElement('div');
+  div.style.cssText='display:flex;gap:6px;align-items:flex-end;margin-bottom:5px';
+  div.innerHTML=`<div style="width:22px;height:22px;border-radius:50%;background:#FEF3C7;color:#92400E;font-size:8px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0">KM</div><div><div style="background:#fff;border-radius:10px;border:.5px solid #E0D8C8;padding:6px 9px;font-size:8px;color:#222;line-height:1.4;max-width:145px">${txt}</div><div style="font-size:6.5px;color:#bbb;margin-top:2px;padding-left:2px">${now}</div></div>`;
+  d.appendChild(div);
+}
+
+function nowTime(){
+  const n=new Date();
+  return`${n.getHours().toString().padStart(2,'0')}:${n.getMinutes().toString().padStart(2,'0')}`;
+}
+
+const views={
+  inbox:()=>({html:inboxScreen(),note:'Chat inbox — সব কথোপকথনের তালিকা (conversation tap করুন)'}),
+  chat:()=>({html:chatScreen(),note:'Live chat — Send বাটন বা quick reply tap করলে message আসবে'})
+};
+
+let cur='inbox';
+function setView(v){
+  cur=v;
+  document.querySelectorAll('.vtab').forEach((t,i)=>t.classList.toggle('on',['inbox','chat'][i]===v));
+  renderView();
+}
+
+function renderView(){
+  const {html,note}=views[cur]();
+  const ph=document.getElementById('phones');
+  ph.innerHTML='';
+  if(cur==='inbox'){
+    const p=makePhone(html,'৳');
+    ph.appendChild(p);
+  } else {
+    const p=makePhone(html,'chat');
+    ph.appendChild(p);
+  }
+  document.getElementById('viewnote').textContent=note;
+  attachOpen=false;
+}
+
+function makePhone(html,id){
+  const wrap=document.createElement('div');
+  wrap.className='phone';
+  const scr=document.createElement('div');
+  scr.className='screen';
+  scr.innerHTML=html;
+  wrap.appendChild(scr);
+  return wrap;
+}
+
+setView('inbox');
+</script>

@@ -1,0 +1,274 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{display:flex;flex-direction:column;align-items:center;padding:1rem 0 1.5rem;gap:12px;font-family:'Segoe UI',Arial,sans-serif}
+.state-tabs{display:flex;gap:6px;background:var(--color-background-secondary);border-radius:20px;padding:4px}
+.stab{padding:5px 14px;border-radius:16px;font-size:11px;cursor:pointer;color:var(--color-text-secondary);font-weight:500;transition:all .18s}
+.stab.on{background:#1B6B4A;color:#fff}
+.phone{background:#1a1a1a;border-radius:36px;padding:10px;width:210px}
+.screen{background:#FFF8ED;border-radius:28px;overflow:hidden;display:flex;flex-direction:column;min-height:460px;font-family:'Segoe UI',Arial,sans-serif}
+.sbar{background:#1B6B4A;height:18px;display:flex;align-items:center;justify-content:space-between;padding:0 10px}
+.stime{font-size:8px;color:#fff;opacity:.9}
+.sdots{display:flex;gap:3px}
+.sd{width:4px;height:4px;border-radius:50%;background:#fff;opacity:.8}
+.hdr{background:#1B6B4A;padding:8px 10px 10px}
+.hdr-lbl{font-size:8px;color:#9FE1CB;margin-bottom:4px}
+.search-box{background:#fff;border-radius:10px;padding:0 10px;display:flex;align-items:center;gap:6px;height:32px}
+.search-input{border:none;outline:none;font-size:8.5px;color:#222;background:transparent;flex:1;font-family:inherit}
+.search-input::placeholder{color:#B0A898}
+.mic-btn{width:18px;height:18px;border-radius:50%;background:#EAF3DE;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer}
+.filter-row{display:flex;gap:5px;padding:7px 10px 0;overflow:hidden}
+.fchip{background:#fff;border:.5px solid #D0C8B8;border-radius:16px;padding:3px 9px;font-size:7.5px;color:#555;white-space:nowrap;cursor:pointer;display:flex;align-items:center;gap:3px;transition:all .15s}
+.fchip.on{background:#EAF3DE;border-color:#1B6B4A;color:#27500A;font-weight:500}
+.fchip-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.body{flex:1;padding:8px 8px 0;display:flex;flex-direction:column;gap:0}
+.result-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.result-count{font-size:8px;color:#888}
+.sort-btn{display:flex;align-items:center;gap:3px;font-size:7.5px;color:#1B6B4A;font-weight:500;cursor:pointer}
+.wcard{background:#fff;border-radius:10px;padding:8px;border:.5px solid #E8E0D0;margin-bottom:6px;cursor:pointer;transition:border-color .15s}
+.wcard:active{border-color:#1B6B4A}
+.wcard-top{display:flex;align-items:flex-start;gap:7px;margin-bottom:5px}
+.avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;flex-shrink:0}
+.wname{font-size:9px;font-weight:500;color:#222;margin-bottom:1px}
+.wskill{font-size:7.5px;color:#1B6B4A;margin-bottom:2px}
+.wrat{font-size:8px;color:#F59E0B;letter-spacing:.5px}
+.wrat-num{font-size:7px;color:#888;margin-left:2px}
+.wcard-tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:5px}
+.tag{font-size:6.5px;padding:2px 6px;border-radius:8px;font-weight:500}
+.tag-green{background:#EAF3DE;color:#27500A}
+.tag-blue{background:#EFF6FF;color:#0C447C}
+.tag-amber{background:#FEF3C7;color:#78350F}
+.wcard-bot{display:flex;align-items:center;justify-content:space-between}
+.dist-row{display:flex;align-items:center;gap:3px;font-size:7px;color:#888}
+.avail-pill{font-size:6.5px;padding:2px 7px;border-radius:8px;font-weight:500}
+.avail-green{background:#EAF3DE;color:#27500A}
+.avail-amber{background:#FEF3C7;color:#78350F}
+.call-mini{background:#1B6B4A;border-radius:6px;padding:3px 8px;font-size:7px;color:#fff;font-weight:500;cursor:pointer}
+.divider{height:.5px;background:#EDE6D8;margin:4px 0}
+.empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:20px}
+.empty-icon{width:44px;height:44px;border-radius:50%;background:#EAF3DE;display:flex;align-items:center;justify-content:center}
+.empty-title{font-size:10px;font-weight:500;color:#222;text-align:center}
+.empty-sub{font-size:8px;color:#888;text-align:center;line-height:1.5}
+.suggest-row{display:flex;flex-direction:column;gap:4px;width:100%}
+.suggest-item{background:#fff;border:.5px solid #E8E0D0;border-radius:8px;padding:6px 10px;font-size:8px;color:#1B6B4A;cursor:pointer;display:flex;align-items:center;gap:6px}
+.recent-row{padding:0}
+.recent-item{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:.5px solid #EDE6D8;cursor:pointer}
+.recent-icon{width:26px;height:26px;border-radius:8px;background:#F1EFE8;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.recent-text{font-size:8.5px;color:#222}
+.recent-sub{font-size:7px;color:#aaa}
+.sec-lbl{font-size:8px;font-weight:500;color:#1B6B4A;margin:6px 0 4px}
+.filter-panel{background:#fff;border-radius:12px;border:.5px solid #E0D8C8;padding:10px;margin-bottom:8px}
+.fp-title{font-size:8.5px;font-weight:500;color:#222;margin-bottom:6px}
+.fp-opts{display:flex;gap:4px;flex-wrap:wrap}
+.fp-opt{font-size:7.5px;padding:3px 8px;border-radius:12px;border:.5px solid #D0C8B8;color:#555;cursor:pointer;background:#fff}
+.fp-opt.on{background:#1B6B4A;border-color:#1B6B4A;color:#fff}
+.range-row{display:flex;align-items:center;gap:6px;margin-top:4px}
+.range-lbl{font-size:7.5px;color:#888;white-space:nowrap}
+.screen-note{font-size:11px;color:var(--color-text-tertiary);text-align:center}
+</style>
+
+<h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">ShebaBondhu search page — three interactive states: empty, results, and filter panel</h2>
+
+<div class="wrap">
+  <div class="state-tabs">
+    <div class="stab on" onclick="show('empty')">খালি অবস্থা</div>
+    <div class="stab" onclick="show('results')">ফলাফল</div>
+    <div class="stab" onclick="show('filter')">ফিল্টার</div>
+  </div>
+
+  <div class="phone">
+    <div class="screen" id="screen"></div>
+  </div>
+  <div class="screen-note" id="snote">State A — ব্যবহারকারী এইমাত্র Search ট্যাব খুলেছেন</div>
+</div>
+
+<script>
+const workers = [
+  {init:'KM',bg:'#FEF3C7',tc:'#92400E',name:'করিম মিস্ত্রী',skill:'সিনিয়র রাজ মিস্ত্রী',rat:'★★★★★',rn:'4.9',rev:'১৪৭',tags:['NID যাচাইকৃত','রাজমিস্ত্রী','টাইলস'],dist:'১.৩ কি.মি',avail:'আজ উপলব্ধ',ac:'green',exp:'১২ বছর'},
+  {init:'RE',bg:'#EFF6FF',tc:'#0C447C',name:'রহিম ইলেকট্রিশিয়ান',skill:'কারেন্ট মিস্ত্রী',rat:'★★★★',rn:'4.6',rev:'৮৩',tags:['NID যাচাইকৃত','ওয়্যারিং','সোলার'],dist:'২.১ কি.মি',avail:'আজ উপলব্ধ',ac:'green',exp:'৮ বছর'},
+  {init:'JP',bg:'#FDF2F8',tc:'#72243E',name:'জালাল রং মিস্ত্রী',skill:'রং মিস্ত্রী',rat:'★★★★',rn:'4.7',rev:'৬১',tags:['দেওয়াল রং','ওয়াটারপ্রুফ'],dist:'৩.৫ কি.মি',avail:'রবিবার পর্যন্ত ব্যস্ত',ac:'amber',exp:'৬ বছর'},
+  {init:'SB',bg:'#E1F5EE',tc:'#085041',name:'সালাম প্লাম্বার',skill:'প্লাম্বিং বিশেষজ্ঞ',rat:'★★★★★',rn:'4.8',rev:'৩৯',tags:['NID যাচাইকৃত','পাইপ','স্যানিটেশন'],dist:'৪.০ কি.মি',avail:'আজ উপলব্ধ',ac:'green',exp:'১০ বছর'},
+];
+
+const recents = [
+  {icon:'⚡',label:'কারেন্ট মিস্ত্রী',sub:'৩ দিন আগে'},
+  {icon:'🏗',label:'রাজ মিস্ত্রী',sub:'১ সপ্তাহ আগে'},
+  {icon:'🎨',label:'রং মিস্ত্রী মিরপুর',sub:'২ সপ্তাহ আগে'},
+];
+
+const suggests = ['রাজ মিস্ত্রী','কারেন্ট মিস্ত্রী','রং মিস্ত্রী','ঠিকাদার','প্লাম্বার','ওয়েল্ডার'];
+
+function wCardHTML(w){
+  return `<div class="wcard" onclick="sendPrompt('Open the worker profile for ${w.name} in ShebaBondhu')">
+    <div class="wcard-top">
+      <div class="avatar" style="background:${w.bg};color:${w.tc}">${w.init}</div>
+      <div style="flex:1;min-width:0">
+        <div class="wname">${w.name}</div>
+        <div class="wskill">${w.skill} · ${w.exp}</div>
+        <div><span class="wrat">${w.rat}</span><span class="wrat-num">${w.rn} (${w.rev} রিভিউ)</span></div>
+      </div>
+    </div>
+    <div class="wcard-tags">${w.tags.map((t,i)=>`<span class="tag ${i===0&&w.tags[0]==='NID যাচাইকৃত'?'tag-green':'tag-blue'}">${t}</span>`).join('')}</div>
+    <div class="wcard-bot">
+      <div class="dist-row">
+        <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><circle cx="4" cy="3" r="1.5" stroke="#888" stroke-width=".8"/><path d="M4 1C2.34 1 1 2.34 1 3c0 2 3 5 3 5s3-3 3-5c0-1.66-1.34-3-3-3z" stroke="#888" stroke-width=".8" fill="none"/></svg>
+        ${w.dist}
+      </div>
+      <span class="avail-pill avail-${w.ac}">${w.avail}</span>
+      <div class="call-mini">কল করুন</div>
+    </div>
+  </div>`;
+}
+
+const screens = {
+  empty: ()=>`
+    <div class="sbar"><span class="stime">10:30</span><div class="sdots"><div class="sd"></div><div class="sd"></div><div class="sd"></div></div></div>
+    <div class="hdr">
+      <div class="hdr-lbl">কী খুঁজছেন?</div>
+      <div class="search-box">
+        <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="4.5" cy="4.5" r="3.5" stroke="#B0A898" stroke-width="1.2"/><line x1="7.5" y1="7.5" x2="10" y2="10" stroke="#B0A898" stroke-width="1.2" stroke-linecap="round"/></svg>
+        <input class="search-input" placeholder="মিস্ত্রী বা ঠিকাদার খুঁজুন…" id="sinput" oninput="onType(this.value)" />
+        <div class="mic-btn">
+          <svg width="8" height="10" viewBox="0 0 8 10" fill="none"><rect x="2.5" y="1" width="3" height="5" rx="1.5" fill="#1B6B4A"/><path d="M1 5.5c0 1.66 1.34 3 3 3s3-1.34 3-3" stroke="#1B6B4A" stroke-width="1" fill="none" stroke-linecap="round"/><line x1="4" y1="8.5" x2="4" y2="10" stroke="#1B6B4A" stroke-width="1" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="body">
+      <div class="sec-lbl">সাম্প্রতিক খোঁজ</div>
+      <div class="recent-row">
+        ${recents.map(r=>`<div class="recent-item" onclick="show('results')">
+          <div class="recent-icon" style="font-size:13px">${r.icon}</div>
+          <div><div class="recent-text">${r.label}</div><div class="recent-sub">${r.sub}</div></div>
+          <svg style="margin-left:auto" width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M2 4h4M4 2l2 2-2 2" stroke="#ccc" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>`).join('')}
+      </div>
+      <div class="sec-lbl" style="margin-top:6px">জনপ্রিয় সার্ভিস</div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        ${suggests.map(s=>`<div class="fchip" style="cursor:pointer" onclick="show('results')">${s}</div>`).join('')}
+      </div>
+      <div class="sec-lbl" style="margin-top:6px">কাছের এলাকা</div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap">
+        ${['মিরপুর','গুলশান','উত্তরা','মোহাম্মদপুর','ধানমন্ডি'].map(a=>`<div class="fchip" onclick="show('results')">
+          <svg width="7" height="7" viewBox="0 0 7 7" fill="none"><circle cx="3.5" cy="2.5" r="1.2" stroke="#1B6B4A" stroke-width=".8"/><path d="M3.5 1C2.12 1 1 2.12 1 2.5c0 1.5 2.5 4 2.5 4S6 4 6 2.5C6 2.12 4.88 1 3.5 1z" stroke="#1B6B4A" stroke-width=".8" fill="none"/></svg>
+          ${a}
+        </div>`).join('')}
+      </div>
+    </div>
+    <div style="background:#fff;border-top:.5px solid #E0D8C8;padding:6px 0 10px;display:flex;justify-content:space-around">
+      ${[['হোম','M2 9L9 3l7 6v7H12v-4H6v4H2V9Z'],['খুঁজুন','M4.5 4.5 a3.5 3.5 0 1 0 7 0 a3.5 3.5 0 1 0 -7 0 M10.5 10.5 L14 14'],['চ্যাট','M1 2h14v10H9l-4 3v-3H1V2Z'],['প্রোফাইল','M6 6 a3 3 0 1 0 6 0 a3 3 0 1 0 -6 0 M2 18c0-3.31 2.69-6 6-6s6 2.69 6 6']].map(([l,p],i)=>`<div style="display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="${p}" stroke="${i===1?'#1B6B4A':'#aaa'}" stroke-width="1.2" fill="${i===1?'none':'none'}" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-size:6.5px;color:${i===1?'#1B6B4A':'#aaa'};font-weight:${i===1?500:400}">${l}</span>
+      </div>`).join('')}
+    </div>`,
+
+  results: ()=>`
+    <div class="sbar"><span class="stime">10:32</span><div class="sdots"><div class="sd"></div><div class="sd"></div><div class="sd"></div></div></div>
+    <div class="hdr">
+      <div class="search-box">
+        <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="4.5" cy="4.5" r="3.5" stroke="#9FE1CB" stroke-width="1.2"/><line x1="7.5" y1="7.5" x2="10" y2="10" stroke="#9FE1CB" stroke-width="1.2" stroke-linecap="round"/></svg>
+        <span style="font-size:8.5px;color:#fff;flex:1">কারেন্ট মিস্ত্রী</span>
+        <div style="width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0" onclick="show('empty')">
+          <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><line x1="1" y1="1" x2="7" y2="7" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/><line x1="7" y1="1" x2="1" y2="7" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+      <div class="filter-row">
+        <div class="fchip on" onclick="show('filter')">
+          <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><line x1="1" y1="2" x2="7" y2="2" stroke="#27500A" stroke-width="1" stroke-linecap="round"/><line x1="2" y1="4" x2="6" y2="4" stroke="#27500A" stroke-width="1" stroke-linecap="round"/><line x1="3" y1="6" x2="5" y2="6" stroke="#27500A" stroke-width="1" stroke-linecap="round"/></svg>
+          ফিল্টার
+        </div>
+        <div class="fchip on"><div class="fchip-dot" style="background:#16A34A"></div>আজ উপলব্ধ</div>
+        <div class="fchip">★ ৪.৫+</div>
+        <div class="fchip">NID যাচাই</div>
+        <div class="fchip">৫ কি.মি</div>
+      </div>
+    </div>
+    <div class="body">
+      <div class="result-hdr">
+        <span class="result-count">১৮ জন পাওয়া গেছে · মিরপুর</span>
+        <div class="sort-btn" onclick="show('filter')">
+          <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><line x1="1" y1="2.5" x2="8" y2="2.5" stroke="#1B6B4A" stroke-width="1" stroke-linecap="round"/><line x1="2.5" y1="4.5" x2="6.5" y2="4.5" stroke="#1B6B4A" stroke-width="1" stroke-linecap="round"/><line x1="4" y1="6.5" x2="5" y2="6.5" stroke="#1B6B4A" stroke-width="1" stroke-linecap="round"/></svg>
+          সাজান
+        </div>
+      </div>
+      ${workers.map(w=>wCardHTML(w)).join('')}
+    </div>
+    <div style="background:#fff;border-top:.5px solid #E0D8C8;padding:6px 0 10px;display:flex;justify-content:space-around">
+      ${[['হোম','M2 9L9 3l7 6v7H12v-4H6v4H2V9Z'],['খুঁজুন','M4.5 4.5 a3.5 3.5 0 1 0 7 0 a3.5 3.5 0 1 0 -7 0 M10.5 10.5 L14 14'],['চ্যাট','M1 2h14v10H9l-4 3v-3H1V2Z'],['প্রোফাইল','M6 6 a3 3 0 1 0 6 0 a3 3 0 1 0 -6 0 M2 18c0-3.31 2.69-6 6-6s6 2.69 6 6']].map(([l,p],i)=>`<div style="display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="${p}" stroke="${i===1?'#1B6B4A':'#aaa'}" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-size:6.5px;color:${i===1?'#1B6B4A':'#aaa'};font-weight:${i===1?500:400}">${l}</span>
+      </div>`).join('')}
+    </div>`,
+
+  filter: ()=>`
+    <div class="sbar"><span class="stime">10:33</span><div class="sdots"><div class="sd"></div><div class="sd"></div><div class="sd"></div></div></div>
+    <div class="hdr">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;cursor:pointer" onclick="show('results')">
+            <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M5 1L2 4l3 3" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <span style="font-size:10px;font-weight:500;color:#fff">ফিল্টার ও সাজানো</span>
+        </div>
+        <span style="font-size:7.5px;color:#9FE1CB;cursor:pointer" onclick="show('results')">রিসেট</span>
+      </div>
+    </div>
+    <div class="body" style="gap:8px">
+      <div class="filter-panel">
+        <div class="fp-title">সার্ভিস ধরন</div>
+        <div class="fp-opts">
+          ${['রাজ মিস্ত্রী','কারেন্ট মিস্ত্রী','রং মিস্ত্রী','প্লাম্বার','ওয়েল্ডার','ঠিকাদার'].map((s,i)=>`<div class="fp-opt ${i===1?'on':''}">${s}</div>`).join('')}
+        </div>
+      </div>
+      <div class="filter-panel">
+        <div class="fp-title">প্রাপ্যতা</div>
+        <div class="fp-opts">
+          ${['আজ','এই সপ্তাহে','যেকোনো সময়'].map((s,i)=>`<div class="fp-opt ${i===0?'on':''}">${s}</div>`).join('')}
+        </div>
+      </div>
+      <div class="filter-panel">
+        <div class="fp-title">রেটিং</div>
+        <div class="fp-opts">
+          ${['যেকোনো','৩+','৪+','৪.৫+'].map((s,i)=>`<div class="fp-opt ${i===3?'on':''}">${s}</div>`).join('')}
+        </div>
+      </div>
+      <div class="filter-panel">
+        <div class="fp-title">দূরত্ব</div>
+        <div class="range-row">
+          <span class="range-lbl">১ কি.মি</span>
+          <input type="range" min="1" max="20" value="5" step="1" style="flex:1" oninput="document.getElementById('dval').textContent=this.value+' কি.মি'"/>
+          <span class="range-lbl" id="dval">৫ কি.মি</span>
+        </div>
+      </div>
+      <div class="filter-panel">
+        <div class="fp-title">যাচাইকরণ</div>
+        <div class="fp-opts">
+          <div class="fp-opt on">NID যাচাইকৃত</div>
+          <div class="fp-opt">ট্রেড লাইসেন্স</div>
+          <div class="fp-opt">শেবাবন্ধু সার্টিফাইড</div>
+        </div>
+      </div>
+      <div class="filter-panel">
+        <div class="fp-title">সাজানোর ক্রম</div>
+        <div class="fp-opts">
+          ${['দূরত্ব অনুযায়ী','রেটিং অনুযায়ী','অভিজ্ঞতা অনুযায়ী','সর্বশেষ সক্রিয়'].map((s,i)=>`<div class="fp-opt ${i===0?'on':''}">${s}</div>`).join('')}
+        </div>
+      </div>
+      <div style="background:#1B6B4A;border-radius:10px;padding:10px;text-align:center;font-size:9px;font-weight:500;color:#fff;cursor:pointer" onclick="show('results')">১৮ জন কর্মী দেখুন →</div>
+    </div>`
+};
+
+const notes = {
+  empty:'State A — ব্যবহারকারী এইমাত্র Search ট্যাব খুলেছেন',
+  results:'State B — "কারেন্ট মিস্ত্রী" খোঁজার পর ফলাফল দেখাচ্ছে',
+  filter:'State C — ফিল্টার প্যানেল খোলা আছে'
+};
+
+function show(s){
+  document.getElementById('screen').innerHTML=screens[s]();
+  document.getElementById('snote').textContent=notes[s];
+  document.querySelectorAll('.stab').forEach((t,i)=>{
+    t.classList.toggle('on',['empty','results','filter'][i]===s);
+  });
+}
+show('empty');
+</script>

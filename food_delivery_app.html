@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BiteRush - Final Version</title>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Satoshi:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --orange:#FF6B35;--orange-light:#FFF0EB;--orange-dark:#C94D18;
+    --cream:#FFFAF6;--dark:#1A1207;--text:#3D2E1E;--muted:#9A8878;
+    --surface:#FFFFFF;--border:#EDE8E1;--success:#2D9F6A;--radius:16px;
+  }
+  body{font-family:'Satoshi',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;overflow-x:hidden}
+  .screen{display:none;min-height:100vh;animation:fadeIn 0.35s ease; flex-direction:column;}
+  .screen.active{display:flex}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+  @keyframes highlightNew{0%{background-color:var(--orange-light)}100%{background-color:var(--surface)}}
+
+  /* ---- LOGIN ---- */
+  #login{background:linear-gradient(160deg,#FF6B35 0%,#FF9A65 50%,#FFD4B8 100%);justify-content:flex-end;position:relative;overflow:hidden; padding-bottom: 0;}
+  .login-bg-circle{position:absolute;border-radius:50%;background:rgba(255,255,255,0.08)}
+  .login-card{background:var(--surface);border-radius:32px 32px 0 0;padding:40px 32px 48px;flex-shrink:0}
+  .brand{font-family:'Clash Display',sans-serif;font-size:28px;font-weight:700;color:var(--dark);margin-bottom:4px}
+  .brand span{color:var(--orange)}
+  .subtitle{color:var(--muted);font-size:14px;margin-bottom:28px}
+  .input-group{margin-bottom:16px}
+  .input-group label{display:block;font-size:13px;font-weight:500;color:var(--muted);margin-bottom:6px;text-transform:uppercase}
+  .input-group input{width:100%;border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;font-size:15px;font-family:'Satoshi',sans-serif;background:var(--cream);color:var(--dark);outline:none;transition:border-color 0.2s}
+  .input-group input:focus{border-color:var(--orange)}
+  .role-picker{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px}
+  .role-btn{border:2px solid var(--border);border-radius:14px;padding:14px 8px;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--cream)}
+  .role-btn.selected{border-color:var(--orange);background:var(--orange-light)}
+  .role-icon{font-size:22px;display:block;margin-bottom:4px}
+  .role-label{font-size:12px;font-weight:500;color:var(--text)}
+  .btn-primary{width:100%;background:var(--orange);color:#fff;border:none;border-radius:14px;padding:17px;font-size:16px;font-weight:600;font-family:'Satoshi',sans-serif;cursor:pointer;transition:transform 0.15s,background 0.2s}
+  .btn-primary:hover{background:var(--orange-dark);transform:translateY(-1px)}
+
+  /* ---- SHARED ---- */
+  .top-bar{background:var(--surface);padding:16px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+  .top-bar h1{font-family:'Clash Display',sans-serif;font-size:20px;font-weight:600;flex:1}
+  .back-btn{width:38px;height:38px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px}
+  .scrollable{flex:1;overflow-y:auto;padding:16px}
+  .badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:500}
+  .badge-success{background:#E6F8EE;color:var(--success)}
+  .badge-orange{background:var(--orange-light);color:var(--orange-dark)}
+  .badge-gray{background:var(--border);color:var(--muted)}
+  .bottom-nav {position:fixed;bottom:0;left:0;right:0;background:var(--surface);display:flex;justify-content:space-around;padding:12px 0 20px;border-top:1px solid var(--border);z-index:100;}
+  .nav-item {display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--muted);cursor:pointer;font-size:12px;font-weight:500;}
+  .nav-item.active {color:var(--orange);}
+
+  /* ---- CUSTOMER DASHBOARD & OTHERS ---- */
+  .customer-header{background:linear-gradient(135deg,#FF6B35,#FF9A65);padding:28px 20px 80px;position:relative}
+  .customer-header h2{font-family:'Clash Display',sans-serif;font-size:26px;font-weight:700;color:#fff;margin-bottom:4px}
+  .customer-header p{color:rgba(255,255,255,0.8);font-size:14px}
+  .search-bar{background:var(--surface);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:10px;margin:0 16px;margin-top:-32px;box-shadow:0 4px 20px rgba(0,0,0,0.1);position:relative;z-index:10;border:1px solid var(--border)}
+  .search-bar input{flex:1;border:none;outline:none;font-size:15px;background:transparent;color:var(--dark)}
+  .categories{display:flex;gap:10px;overflow-x:auto;padding:20px 16px 4px;scrollbar-width:none}
+  .categories::-webkit-scrollbar{display:none}
+  .cat-pill{white-space:nowrap;padding:9px 18px;border-radius:30px;border:1.5px solid var(--border);font-size:13px;font-weight:500;cursor:pointer;background:var(--surface)}
+  .cat-pill.active{background:var(--orange);border-color:var(--orange);color:#fff}
+  .section-title{font-family:'Clash Display',sans-serif;font-size:18px;font-weight:600;padding:16px 16px 10px}
+  .restaurant-card{background:var(--surface);border-radius:var(--radius);margin:0 16px 14px;overflow:hidden;cursor:pointer;border:1px solid var(--border)}
+  .restaurant-img{height:160px;display:flex;align-items:center;justify-content:center;font-size:56px}
+  .restaurant-info{padding:14px 16px}
+  .restaurant-name{font-family:'Clash Display',sans-serif;font-size:17px;font-weight:600;margin-bottom:6px}
+  .restaurant-meta{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted)}
+  
+  /* MENU & CART */
+  .menu-hero{height:220px;display:flex;align-items:center;justify-content:center;font-size:72px;position:relative}
+  .menu-hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.35),transparent)}
+  .menu-hero-title{position:absolute;bottom:16px;left:20px;color:#fff;font-family:'Clash Display',sans-serif;font-size:22px;font-weight:700;z-index:1}
+  .menu-item{background:var(--surface);border-radius:var(--radius);margin:0 16px 12px;padding:16px;display:flex;align-items:center;gap:14px;border:1px solid var(--border)}
+  .menu-item-info{flex:1}
+  .menu-item-name{font-weight:600;font-size:15px;margin-bottom:3px}
+  .menu-item-price{font-weight:700;color:var(--orange);font-size:16px}
+  .add-btn{background:var(--orange);color:#fff;border:none;border-radius:10px;width:36px;height:36px;font-size:20px;cursor:pointer}
+  .qty-control{display:flex;align-items:center;gap:8px}
+  .qty-btn{background:var(--orange-light);color:var(--orange);border:none;border-radius:8px;width:30px;height:30px;font-size:16px;cursor:pointer;font-weight:700}
+  .cart-fab{position:fixed;bottom:90px;right:20px;background:var(--orange);color:#fff;border:none;border-radius:20px;padding:14px 22px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(255,107,53,0.4);display:flex;align-items:center;gap:8px;z-index:200}
+  
+  /* CHECKOUT */
+  .address-box {background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:0 16px 16px;display:flex;gap:12px;align-items:flex-start}
+  .payment-method {background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;margin:0 16px 10px;display:flex;align-items:center;gap:12px;cursor:pointer}
+  .payment-method.active {border-color:var(--orange);background:var(--orange-light)}
+  .order-summary{background:var(--surface);border-radius:var(--radius);padding:16px 20px;margin:0 16px 16px;border:1px solid var(--border)}
+  .order-row{display:flex;justify-content:space-between;align-items:center;font-size:14px;padding:8px 0;border-bottom:1px solid var(--border)}
+  .order-row:last-child{border-bottom:none;font-weight:700;font-size:15px;padding-top:10px}
+
+  /* ---- ADMIN & RESTAURANT COMMON ---- */
+  .dash-header {background:linear-gradient(135deg,#1A1207,#3D2E1E);padding:24px 20px;color:#fff;}
+  .dash-header h2 {font-family:'Clash Display';font-size:24px;font-weight:700;margin-top:4px}
+  .stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:16px}
+  .stat-card{background:var(--surface);border-radius:12px;padding:16px;border:1px solid var(--border)}
+  .stat-val{font-family:'Clash Display';font-size:22px;font-weight:700;color:var(--dark);margin:4px 0}
+  
+  /* RESTAURANT SPECIFIC */
+  .order-card {background:var(--surface);border-radius:var(--radius);padding:18px;margin:0 16px 16px;border:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,0.04)}
+  .order-header {display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-bottom:12px;border-bottom:1px dashed var(--border)}
+  .order-id {font-weight:700;font-size:16px;font-family:'Clash Display'}
+  .customer-info-box {background:var(--cream);border-radius:10px;padding:12px;margin-bottom:14px;border:1px solid #F0EBE1}
+  .c-info-item {display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--text);margin-bottom:6px}
+  .c-info-item:last-child {margin-bottom:0}
+  .c-info-name {font-weight:600;font-size:14px}
+  .order-items {font-size:14px;color:var(--text);margin-bottom:14px;line-height:1.6}
+  .order-footer {display:flex;justify-content:space-between;align-items:center;padding-top:12px;border-top:1px solid var(--border)}
+  .bill-total {font-weight:700;color:var(--orange);font-size:18px}
+  .accept-btn {background:var(--success);color:#fff;border:none;border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600;cursor:pointer}
+  .reject-btn {background:var(--orange-light);color:var(--orange-dark);border:none;border-radius:10px;padding:10px 14px;font-size:13px;font-weight:600;cursor:pointer}
+
+  /* ---- ADMIN SPECIFIC ---- */
+  .admin-table {background:var(--surface);border-radius:var(--radius);margin:0 16px 16px;border:1px solid var(--border);overflow:hidden;}
+  .admin-table-item {display:flex;align-items:center;padding:12px 16px;border-bottom:1px solid var(--border);gap:12px;}
+  .admin-table-item:last-child {border-bottom:none;}
+  .table-icon {width:40px;height:40px;border-radius:50%;background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:20px;}
+  
+  /* Misc */
+  .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--dark);color:#fff;padding:12px 20px;border-radius:14px;font-size:14px;font-weight:500;transition:transform 0.35s;z-index:9999;white-space:nowrap}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+  #login .bottom-nav, #menu .bottom-nav, #checkout .bottom-nav, #tracking .bottom-nav, #restaurant .bottom-nav, #admin .bottom-nav {display:none;}
+  #customer.active {padding-bottom: 80px;}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<div class="screen active" id="login">
+  <div style="flex:1;position:relative">
+    <div class="login-bg-circle" style="width:300px;height:300px;top:-60px;left:-80px"></div>
+    <div style="padding:60px 32px 20px;position:relative;z-index:1">
+      <div style="font-size:52px;margin-bottom:16px;animation:pulse 2s infinite">🍔</div>
+      <div style="font-family:'Clash Display',sans-serif;font-size:42px;font-weight:700;color:#fff;line-height:1.1;letter-spacing:-1px">Bite<span style="color:rgba(255,255,255,0.7)">Rush</span></div>
+      <p style="color:rgba(255,255,255,0.75);font-size:16px;margin-top:8px">Food at the speed of craving</p>
+    </div>
+  </div>
+  <div class="login-card">
+    <div class="brand">Sign in to <span>BiteRush</span></div>
+    <p class="subtitle">Choose your role to get started</p>
+    <div class="input-group">
+      <label>Email / Phone</label>
+      <input type="text" value="raihan@example.com">
+    </div>
+    <div class="input-group" style="margin-bottom:20px">
+      <label>Password</label>
+      <input type="password" value="password">
+    </div>
+    <div class="role-picker" id="rolePicker">
+      <div class="role-btn selected" onclick="selectRole('customer',this)"><span class="role-icon">🛵</span><span class="role-label">Customer</span></div>
+      <div class="role-btn" onclick="selectRole('restaurant',this)"><span class="role-icon">🍳</span><span class="role-label">Restaurant</span></div>
+      <div class="role-btn" onclick="selectRole('admin',this)"><span class="role-icon">⚙️</span><span class="role-label">Admin</span></div>
+    </div>
+    <button class="btn-primary" onclick="login()">Secure Login →</button>
+  </div>
+</div>
+
+<div class="screen" id="customer">
+  <div class="customer-header">
+    <p style="color:rgba(255,255,255,0.7);font-size:13px;margin-bottom:4px">📍 Rajshahi</p>
+    <h2>Hey, Raihan! 👋</h2>
+    <p>What are you craving today?</p>
+  </div>
+  <div class="search-bar"><span>🔍</span><input placeholder="Search restaurants, food..."></div>
+  <div class="categories">
+    <div class="cat-pill active">🍽️ All</div>
+    <div class="cat-pill">🍕 Pizza</div>
+    <div class="cat-pill">🍔 Burgers</div>
+  </div>
+  <div class="section-title">🔥 Popular Near You</div>
+  <div class="scrollable" style="padding-top:0">
+    <div class="restaurant-card" onclick="openRestaurant('Italiano Primo','🍕','#FFF3EE')">
+      <div class="restaurant-img" style="background:linear-gradient(135deg,#FFF3EE,#FFE0CC)">🍕</div>
+      <div class="restaurant-info">
+        <div class="restaurant-name">Italiano Primo</div>
+        <div class="restaurant-meta"><span class="star">★</span><span>4.8</span><span>•</span><span>25–35 min</span></div>
+      </div>
+    </div>
+    <div class="restaurant-card" onclick="openRestaurant('Burger Lab','🍔','#FFF8EE')">
+      <div class="restaurant-img" style="background:linear-gradient(135deg,#FFF8EE,#FFE8AA)">🍔</div>
+      <div class="restaurant-info">
+        <div class="restaurant-name">Burger Lab</div>
+        <div class="restaurant-meta"><span class="star">★</span><span>4.6</span><span>•</span><span>15–25 min</span></div>
+      </div>
+    </div>
+  </div>
+  <button class="cart-fab" id="cartFab" style="display:none" onclick="goTo('checkout')">
+    🛒 View Cart <span class="cart-count" id="cartCount">0</span>
+  </button>
+  <div class="bottom-nav">
+    <div class="nav-item active" onclick="goTo('customer')"><span class="nav-icon">🏠</span><span>Home</span></div>
+    <div class="nav-item" onclick="goTo('login')"><span class="nav-icon">🚪</span><span>Logout</span></div>
+  </div>
+</div>
+
+<div class="screen" id="menu">
+  <div class="menu-hero" id="menuHero">
+    <div class="menu-hero-overlay"></div>
+    <span id="menuEmoji" style="position:relative;z-index:1;font-size:72px"></span>
+    <div class="menu-hero-title" id="menuTitle"></div>
+  </div>
+  <div class="top-bar">
+    <button class="back-btn" onclick="goTo('customer')">←</button>
+    <h1>Menu</h1>
+  </div>
+  <div class="scrollable"><div id="menuItems"></div></div>
+  <button class="cart-fab" id="menuCartFab" style="display:none" onclick="goTo('checkout')">
+    🛒 Checkout <span class="cart-count" id="menuCartCount">0</span>
+  </button>
+</div>
+
+<div class="screen" id="checkout">
+  <div class="top-bar"><button class="back-btn" onclick="goTo('menu')">←</button><h1>Checkout</h1></div>
+  <div class="scrollable" style="padding-top:20px">
+    <div class="section-title" style="padding-top:0">Delivery Address</div>
+    <div class="address-box">
+      <div style="font-size:24px">📍</div>
+      <div>
+        <div style="font-weight:600;font-size:15px;margin-bottom:4px">Home</div>
+        <div style="font-size:13px;color:var(--muted)">House 12, Road 5, Block C, Gulshan-1, Dhaka</div>
+      </div>
+    </div>
+    <div class="section-title">Payment Method</div>
+    <div class="payment-method active">
+      <div style="font-size:24px">💵</div>
+      <div style="flex:1;font-weight:500;font-size:15px">Cash on Delivery</div>
+      <div style="color:var(--orange);font-weight:700">✓</div>
+    </div>
+    <div class="section-title" style="margin-top:10px">Order Summary</div>
+    <div class="order-summary">
+      <div id="checkoutItems"></div>
+      <div class="order-row"><span>Subtotal</span><span id="checkSubtotal">৳0</span></div>
+      <div class="order-row"><span>Delivery Fee</span><span>৳30</span></div>
+      <div class="order-row"><span>Total</span><span id="checkTotal" style="color:var(--orange)">৳30</span></div>
+    </div>
+    <div style="padding:0 16px; margin-top:20px;">
+        <button class="btn-primary" onclick="placeOrder()">Confirm Order</button>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="tracking">
+  <div class="top-bar"><button class="back-btn" onclick="goTo('customer')">←</button><h1>Track Order</h1></div>
+  <div class="scrollable" style="text-align:center; padding-top:60px">
+    <div style="font-size:80px; margin-bottom:20px">🛵</div>
+    <h2 style="font-family:'Clash Display'">Order Confirmed!</h2>
+    <p style="color:var(--muted); margin-top:10px">The restaurant is preparing your food.</p>
+    <button class="btn-primary" style="margin-top:40px; width:80%" onclick="goTo('customer')">Back to Home</button>
+  </div>
+</div>
+
+<div class="screen" id="restaurant">
+  <div class="dash-header">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div>
+        <span class="badge badge-success">● Open</span>
+        <h2>Restaurant Panel</h2>
+        <p style="font-size:13px;color:rgba(255,255,255,0.7);margin-top:4px">Manage your incoming orders</p>
+      </div>
+      <button onclick="goTo('login')" style="background:rgba(255,255,255,0.2);border:none;color:#fff;border-radius:10px;padding:8px 12px;cursor:pointer">Logout</button>
+    </div>
+  </div>
+  
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div style="font-size:13px;color:var(--muted)">Orders Today</div>
+      <div class="stat-val" id="totalOrdersStat">12</div>
+    </div>
+    <div class="stat-card">
+      <div style="font-size:13px;color:var(--muted)">Revenue</div>
+      <div class="stat-val" id="totalRevenueStat">৳4,250</div>
+    </div>
+  </div>
+
+  <div class="section-title" style="display:flex; justify-content:space-between; align-items:center">
+    <span>Live Orders</span>
+    <span class="badge badge-orange" style="font-size:11px">Auto-updates</span>
+  </div>
+  <div class="scrollable" style="padding-top:0" id="restaurantOrders">
+    </div>
+</div>
+
+<div class="screen" id="admin">
+  <div class="dash-header" style="background:linear-gradient(135deg, #0f2027, #203a43);">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div>
+        <span class="badge badge-orange">System Live</span>
+        <h2>Admin Console</h2>
+        <p style="font-size:13px;color:rgba(255,255,255,0.7);margin-top:4px">April 29, 2026</p>
+      </div>
+      <button onclick="goTo('login')" style="background:rgba(255,255,255,0.2);border:none;color:#fff;border-radius:10px;padding:8px 12px;cursor:pointer">Logout</button>
+    </div>
+  </div>
+  
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div style="font-size:20px;margin-bottom:4px">📦</div>
+      <div class="stat-val" id="adminTotalOrders">1,520</div>
+      <div style="font-size:12px;color:var(--muted)">Total Orders</div>
+    </div>
+    <div class="stat-card">
+      <div style="font-size:20px;margin-bottom:4px">💰</div>
+      <div class="stat-val" id="adminTotalRev">৳340k</div>
+      <div style="font-size:12px;color:var(--muted)">Total Revenue</div>
+    </div>
+    <div class="stat-card">
+      <div style="font-size:20px;margin-bottom:4px">🏪</div>
+      <div class="stat-val">142</div>
+      <div style="font-size:12px;color:var(--muted)">Active Restaurants</div>
+    </div>
+    <div class="stat-card">
+      <div style="font-size:20px;margin-bottom:4px">🛵</div>
+      <div class="stat-val">58</div>
+      <div style="font-size:12px;color:var(--muted)">Active Riders</div>
+    </div>
+  </div>
+
+  <div class="section-title">Live System Monitor</div>
+  <div class="admin-table" id="adminLiveFeed">
+    <div class="admin-table-item">
+      <div class="table-icon">✓</div>
+      <div style="flex:1">
+        <div style="font-weight:600;font-size:14px">#BR-2939 completed</div>
+        <div style="font-size:12px;color:var(--muted)">Sakura Sushi</div>
+      </div>
+      <div style="font-size:12px;color:var(--muted)">5m ago</div>
+    </div>
+  </div>
+
+  <div class="section-title">Top Performing Restaurants</div>
+  <div class="admin-table">
+    <div class="admin-table-item">
+      <div class="table-icon" style="background:#FFF3EE">🍕</div>
+      <div style="flex:1">
+        <div style="font-weight:600;font-size:14px">Italiano Primo</div>
+        <div style="font-size:12px;color:var(--muted)">৳84,200 this week</div>
+      </div>
+      <span class="badge badge-success">Active</span>
+    </div>
+    <div class="admin-table-item">
+      <div class="table-icon" style="background:#FFF8EE">🍔</div>
+      <div style="flex:1">
+        <div style="font-weight:600;font-size:14px">Burger Lab</div>
+        <div style="font-size:12px;color:var(--muted)">৳62,500 this week</div>
+      </div>
+      <span class="badge badge-success">Active</span>
+    </div>
+  </div>
+  <div style="height: 40px;"></div>
+</div>
+
+<script>
+let selectedRole='customer';
+let cart={};
+let orderCounter = 2940;
+let restaurantTotalRevenue = 4250;
+let restaurantTotalOrders = 12;
+
+let globalAdminOrders = 1520;
+let globalAdminRev = 340000;
+
+const menus={
+  'Italiano Primo':[
+    {name:'Margherita Pizza',price:650,emoji:'🍕'},
+    {name:'Pepperoni Pizza',price:780,emoji:'🍕'}
+  ],
+  'Burger Lab':[
+    {name:'Classic Smash',price:350,emoji:'🍔'},
+    {name:'Double Smash',price:480,emoji:'🍔'}
+  ]
+};
+
+function selectRole(role,el){
+  selectedRole=role;
+  document.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function login(){
+  if(selectedRole==='customer') goTo('customer');
+  else if(selectedRole==='restaurant') goTo('restaurant');
+  else goTo('admin');
+}
+
+function goTo(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+  if(id==='checkout') renderCheckout();
+}
+
+function openRestaurant(name,emoji,bg){
+  document.getElementById('menuEmoji').textContent=emoji;
+  document.getElementById('menuTitle').textContent=name;
+  document.getElementById('menuHero').style.background=`linear-gradient(135deg,${bg},${bg}cc)`;
+  
+  const items=menus[name]||[];
+  const container=document.getElementById('menuItems');
+  container.innerHTML='';
+  items.forEach((item,i)=>{
+    const qty=cart[name]?.[i]?.qty||0;
+    const div=document.createElement('div');
+    div.className='menu-item';
+    div.innerHTML=`
+      <div style="font-size:40px">${item.emoji}</div>
+      <div class="menu-item-info">
+        <div class="menu-item-name">${item.name}</div>
+        <div class="menu-item-price">৳${item.price}</div>
+      </div>
+      <div id="ctrl-${name}-${i}">
+        ${qty>0?`<div class="qty-control"><button class="qty-btn" onclick="updateQty('${name}',${i},-1)">−</button><span style="font-weight:700">${qty}</span><button class="qty-btn" onclick="updateQty('${name}',${i},1)">+</button></div>`:`<button class="add-btn" onclick="addToCart('${name}',${i})">+</button>`}
+      </div>`;
+    container.appendChild(div);
+  });
+  updateCartFab();
+  goTo('menu');
+}
+
+function addToCart(rest,idx){
+  if(!cart[rest]) cart[rest]={};
+  if(!cart[rest][idx]) cart[rest][idx]={item:menus[rest][idx],qty:0};
+  cart[rest][idx].qty=1;
+  openRestaurant(document.getElementById('menuTitle').textContent, document.getElementById('menuEmoji').textContent, '#FFF3EE'); 
+  showToast('Added to cart!');
+}
+
+function updateQty(rest,idx,delta){
+  if(!cart[rest]||!cart[rest][idx]) return;
+  cart[rest][idx].qty+=delta;
+  if(cart[rest][idx].qty<=0) delete cart[rest][idx];
+  openRestaurant(document.getElementById('menuTitle').textContent, document.getElementById('menuEmoji').textContent, '#FFF3EE'); 
+}
+
+function updateCartFab(){
+  let count=0;
+  Object.values(cart).forEach(r=>Object.values(r).forEach(i=>count+=i.qty));
+  document.querySelectorAll('.cart-fab').forEach(el=>el.style.display=count>0?'flex':'none');
+  document.querySelectorAll('.cart-count').forEach(el=>el.textContent=count);
+}
+
+function renderCheckout(){
+  const container=document.getElementById('checkoutItems');
+  container.innerHTML='';
+  let subtotal=0;
+  Object.values(cart).forEach(rest=>Object.values(rest).forEach(entry=>{
+    const total=entry.item.price*entry.qty;
+    subtotal+=total;
+    container.innerHTML+=`<div class="order-row"><span>${entry.item.emoji} ${entry.item.name} ×${entry.qty}</span><span>৳${total}</span></div>`;
+  }));
+  document.getElementById('checkSubtotal').textContent='৳'+subtotal;
+  document.getElementById('checkTotal').textContent='৳'+(subtotal+30);
+}
+
+// ----- CENTRAL ORDER PROCESSING (SENDS TO RESTAURANT & ADMIN) -----
+function placeOrder(){
+  orderCounter++;
+  let orderItemsHtml = '';
+  let subtotal = 0;
+  let restName = '';
+  
+  Object.keys(cart).forEach(rName => {
+    restName = rName; // Getting the restaurant name for admin panel
+    Object.values(cart[rName]).forEach(entry=>{
+      orderItemsHtml += `${entry.item.emoji} ${entry.item.name} × ${entry.qty} <br>`;
+      subtotal += entry.item.price * entry.qty;
+    });
+  });
+  
+  let finalBill = subtotal + 30;
+
+  // 1. Send to Restaurant Dashboard
+  const newOrderCard = `
+    <div class="order-card" style="animation: highlightNew 2s ease">
+      <div class="order-header">
+        <span class="order-id">Order #BR-${orderCounter}</span>
+        <span class="badge badge-orange">New Order</span>
+      </div>
+      <div class="customer-info-box">
+        <div class="c-info-item"><span>👤</span> <div class="c-info-name">Rafiq Islam</div></div>
+        <div class="c-info-item"><span>📞</span> <div>01711-223344</div></div>
+        <div class="c-info-item"><span>📍</span> <div>House 12, Road 5, Block C, Gulshan-1, Dhaka</div></div>
+      </div>
+      <div class="order-items">${orderItemsHtml}</div>
+      <div class="order-footer">
+        <span class="bill-total">৳${finalBill}</span>
+        <div style="display:flex;gap:8px">
+          <button class="reject-btn" onclick="this.closest('.order-card').remove();showToast('Order Declined')">Decline</button>
+          <button class="accept-btn" onclick="acceptOrder(this, ${finalBill})">Accept</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById('restaurantOrders').insertAdjacentHTML('afterbegin', newOrderCard);
+
+  // 2. Send to Admin Live Feed
+  globalAdminOrders++;
+  globalAdminRev += finalBill;
+  
+  document.getElementById('adminTotalOrders').textContent = globalAdminOrders.toLocaleString();
+  document.getElementById('adminTotalRev').textContent = '৳' + (globalAdminRev/1000).toFixed(1) + 'k';
+
+  const adminFeedHtml = `
+    <div class="admin-table-item" style="animation: highlightNew 2s ease">
+      <div class="table-icon" style="background:var(--orange-light);color:var(--orange)">⚡</div>
+      <div style="flex:1">
+        <div style="font-weight:600;font-size:14px">New Order: #BR-${orderCounter}</div>
+        <div style="font-size:12px;color:var(--muted)">Rafiq ➔ ${restName} (৳${finalBill})</div>
+      </div>
+      <span class="badge badge-orange">Just Now</span>
+    </div>
+  `;
+  document.getElementById('adminLiveFeed').insertAdjacentHTML('afterbegin', adminFeedHtml);
+
+  // 3. Clear customer Cart and proceed
+  showToast('Order Placed Successfully!');
+  cart={}; 
+  updateCartFab();
+  setTimeout(()=>goTo('tracking'), 800);
+}
+
+function acceptOrder(btn, amount){
+  const card = btn.closest('.order-card');
+  const badge = card.querySelector('.badge');
+  badge.className = 'badge badge-success';
+  badge.textContent = 'Preparing';
+  
+  const footer = card.querySelector('.order-footer');
+  footer.innerHTML = `
+    <span class="bill-total">৳${amount}</span>
+    <button class="accept-btn" onclick="showToast('Marked as ready!')">✓ Ready for Pickup</button>
+  `;
+  
+  restaurantTotalOrders++;
+  restaurantTotalRevenue += amount;
+  document.getElementById('totalOrdersStat').textContent = restaurantTotalOrders;
+  document.getElementById('totalRevenueStat').textContent = '৳' + restaurantTotalRevenue.toLocaleString();
+  
+  showToast('Order Accepted!');
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+
+// Render initial dummy order in restaurant panel
+document.getElementById('restaurantOrders').innerHTML = `
+    <div class="order-card">
+      <div class="order-header"><span class="order-id">Order #BR-2940</span><span class="badge badge-success">Preparing</span></div>
+      <div class="customer-info-box">
+        <div class="c-info-item"><span>👤</span> <div class="c-info-name">Karim Ahmed</div></div>
+        <div class="c-info-item"><span>📞</span> <div>01811-998877</div></div>
+        <div class="c-info-item"><span>📍</span> <div>Flat 4B, Navana Tower, Banani</div></div>
+      </div>
+      <div class="order-items">🍔 Classic Smash × 1 <br>🍟 Loaded Fries × 1</div>
+      <div class="order-footer">
+        <span class="bill-total">৳570</span>
+        <button class="accept-btn" onclick="showToast('Marked as ready!')">✓ Ready for Pickup</button>
+      </div>
+    </div>`;
+</script>
+</body>
+</html>

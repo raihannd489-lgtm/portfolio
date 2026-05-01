@@ -1,0 +1,350 @@
+
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',Arial,sans-serif}
+  .wrap{display:flex;flex-direction:column;align-items:center;padding:1rem 0 2rem;gap:16px}
+  .stepper{display:flex;align-items:center;gap:0;width:340px}
+  .step-node{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1}
+  .step-circle{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;border:1.5px solid #ccc;color:#aaa;background:#fff;transition:all 0.2s;cursor:pointer}
+  .step-circle.done{background:#1B6B4A;border-color:#1B6B4A;color:#fff}
+  .step-circle.active{background:#fff;border-color:#1B6B4A;color:#1B6B4A}
+  .step-lbl{font-size:7.5px;color:#aaa;text-align:center;line-height:1.3;transition:color 0.2s}
+  .step-lbl.active{color:#1B6B4A;font-weight:500}
+  .step-lbl.done{color:#1B6B4A}
+  .step-line{flex:1;height:1.5px;background:#ddd;margin-bottom:14px;transition:background 0.2s}
+  .step-line.done{background:#1B6B4A}
+  .phone{background:#1a1a1a;border-radius:36px;padding:10px;width:200px}
+  .screen{background:#FFF8ED;border-radius:28px;overflow:hidden;display:flex;flex-direction:column;font-family:'Segoe UI',Arial,sans-serif;min-height:400px}
+  .sbar{background:#1B6B4A;height:18px;display:flex;align-items:center;justify-content:space-between;padding:0 10px}
+  .stime{font-size:8px;color:#fff;opacity:.9}
+  .sdots{display:flex;gap:3px}
+  .sd{width:4px;height:4px;border-radius:50%;background:#fff;opacity:.8}
+  .hdr{background:#1B6B4A;padding:8px 10px 10px}
+  .hdr-row{display:flex;align-items:center;gap:6px;margin-bottom:2px}
+  .back-btn{width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+  .hdr-title{font-size:10px;font-weight:500;color:#fff;flex:1}
+  .hdr-step{font-size:8px;color:#9FE1CB}
+  .progress-bar{height:3px;background:rgba(255,255,255,.2);border-radius:2px;margin-top:6px}
+  .progress-fill{height:100%;background:#F59E0B;border-radius:2px;transition:width .3s}
+  .body{flex:1;padding:10px;overflow:hidden;display:flex;flex-direction:column;gap:8px}
+  .sec-title{font-size:8.5px;font-weight:500;color:#1B6B4A;margin-bottom:2px}
+  .card{background:#fff;border-radius:10px;padding:8px 10px;border:.5px solid #E8E0D0}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:6px}
+  .lbl{font-size:8px;color:#888}
+  .val{font-size:8.5px;color:#222;font-weight:500}
+  .chip{background:#EAF3DE;color:#27500A;font-size:7px;padding:2px 7px;border-radius:10px;font-weight:500}
+  .chip-amber{background:#FEF3C7;color:#78350F}
+  .chip-blue{background:#EFF6FF;color:#0C447C}
+  .opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+  .opt{background:#fff;border-radius:8px;padding:7px 8px;border:.5px solid #E8E0D0;cursor:pointer;transition:border-color .15s}
+  .opt.sel{border:1.5px solid #1B6B4A;background:#EAF3DE}
+  .opt-title{font-size:8px;font-weight:500;color:#222;margin-bottom:2px}
+  .opt-sub{font-size:7px;color:#888}
+  .inp-row{display:flex;flex-direction:column;gap:3px}
+  .inp-lbl{font-size:8px;color:#555;font-weight:500}
+  .fake-inp{background:#fff;border:.5px solid #D0C8B8;border-radius:7px;padding:6px 8px;font-size:8px;color:#888}
+  .fake-inp.filled{color:#222}
+  .big-btn{background:#1B6B4A;color:#fff;border-radius:10px;padding:10px;text-align:center;font-size:9px;font-weight:500;cursor:pointer;margin-top:auto}
+  .big-btn-amber{background:#F59E0B;color:#412402}
+  .divider{height:.5px;background:#E8E0D0;margin:2px 0}
+  .avatar-sm{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;flex-shrink:0}
+  .star-row{color:#F59E0B;font-size:8px;letter-spacing:1px}
+  .tag-row{display:flex;gap:4px;flex-wrap:wrap}
+  .success-circle{width:52px;height:52px;border-radius:50%;background:#EAF3DE;border:2px solid #1B6B4A;display:flex;align-items:center;justify-content:center;margin:0 auto 8px}
+  .summary-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:.5px solid #F0EAE0;font-size:8px}
+  .summary-row:last-child{border-bottom:none}
+  .sum-key{color:#888}
+  .sum-val{color:#222;font-weight:500}
+  .nav-btn-row{display:flex;gap:8px;width:100%;justify-content:center}
+  .nav-btn{padding:8px 22px;border-radius:20px;font-size:11px;cursor:pointer;font-weight:500;border:1.5px solid #1B6B4A;color:#1B6B4A;background:#fff}
+  .nav-btn.primary{background:#1B6B4A;color:#fff;border-color:#1B6B4A}
+  .screen-lbl{font-size:11px;color:var(--color-text-tertiary);text-align:center;margin-top:6px}
+</style>
+
+<h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">ShebaBondhu full building contractor booking flow — 5 step interactive walkthrough</h2>
+
+<div class="wrap">
+  <div class="stepper" id="stepper"></div>
+  <div class="phone">
+    <div class="screen" id="screen"></div>
+  </div>
+  <div class="screen-lbl" id="slbl"></div>
+  <div class="nav-btn-row">
+    <button class="nav-btn" id="prevBtn" onclick="go(-1)">&#8592; আগে</button>
+    <button class="nav-btn primary" id="nextBtn" onclick="go(1)">পরের ধাপ &#8594;</button>
+  </div>
+</div>
+
+<script>
+const steps=[
+  {label:'ধরন\nবাছাই',short:'Step 1/5'},
+  {label:'কাজের\nবিবরণ',short:'Step 2/5'},
+  {label:'ঠিকাদার\nবাছাই',short:'Step 3/5'},
+  {label:'সময় ও\nপেমেন্ট',short:'Step 4/5'},
+  {label:'নিশ্চিত',short:'Step 5/5'}
+];
+
+const screens=[
+  // Step 1 — Project type
+  ()=>`
+    <div class="sbar"><span class="stime">10:02</span><div class="sdots"><div class="sd"></div><div class="sd"></div><div class="sd"></div></div></div>
+    <div class="hdr">
+      <div class="hdr-row">
+        <div class="back-btn"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M5 1L2 4l3 3" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="hdr-title">সম্পূর্ণ বিল্ডিং ঠিকাদার</span>
+        <span class="hdr-step">Step 1/5</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:20%"></div></div>
+    </div>
+    <div class="body">
+      <div class="sec-title">প্রকল্পের ধরন বাছাই করুন</div>
+      <div class="opt-grid">
+        <div class="opt sel" id="o1" onclick="selOpt('o1','o2','o3','o4')">
+          <div style="margin-bottom:4px"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="8" width="12" height="6" rx="1" fill="#1B6B4A" opacity=".5"/><polygon points="8,2 14,8 2,8" fill="#1B6B4A"/></svg></div>
+          <div class="opt-title">নতুন বাড়ি নির্মাণ</div>
+          <div class="opt-sub">Foundation থেকে শেষ</div>
+        </div>
+        <div class="opt" id="o2" onclick="selOpt('o2','o1','o3','o4')">
+          <div style="margin-bottom:4px"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="6" width="12" height="8" rx="1" fill="#D97706" opacity=".4"/><polygon points="8,1 14,6 2,6" fill="#D97706" opacity=".6"/><line x1="5" y1="6" x2="5" y2="14" stroke="#D97706" stroke-width="1.2"/></svg></div>
+          <div class="opt-title">বাড়ি সংস্কার</div>
+          <div class="opt-sub">পুরনো বাড়ি নতুন করা</div>
+        </div>
+        <div class="opt" id="o3" onclick="selOpt('o3','o1','o2','o4')">
+          <div style="margin-bottom:4px"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="5" width="14" height="9" rx="1" fill="#185FA5" opacity=".35"/><rect x="4" y="2" width="8" height="4" rx="1" fill="#185FA5" opacity=".5"/></svg></div>
+          <div class="opt-title">ভবন সম্প্রসারণ</div>
+          <div class="opt-sub">নতুন তলা বা রুম যোগ</div>
+        </div>
+        <div class="opt" id="o4" onclick="selOpt('o4','o1','o2','o3')">
+          <div style="margin-bottom:4px"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="10" rx="1" fill="#888" opacity=".3"/><rect x="5" y="1" width="6" height="4" rx="1" fill="#888" opacity=".5"/><line x1="8" y1="8" x2="8" y2="13" stroke="#888" stroke-width="1.2"/><line x1="5" y1="10.5" x2="11" y2="10.5" stroke="#888" stroke-width="1.2"/></svg></div>
+          <div class="opt-title">বাণিজ্যিক ভবন</div>
+          <div class="opt-sub">দোকান, অফিস, গুদাম</div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:2px">
+        <div class="lbl" style="margin-bottom:4px">আনুমানিক বাজেট</div>
+        <div class="opt-grid">
+          <div class="opt sel" id="b1" onclick="selOpt('b1','b2','b3','b4')"><div class="opt-title">৫–১৫ লক্ষ</div><div class="opt-sub">ছোট প্রকল্প</div></div>
+          <div class="opt" id="b2" onclick="selOpt('b2','b1','b3','b4')"><div class="opt-title">১৫–৫০ লক্ষ</div><div class="opt-sub">মাঝারি</div></div>
+          <div class="opt" id="b3" onclick="selOpt('b3','b1','b2','b4')"><div class="opt-title">৫০ লক্ষ+</div><div class="opt-sub">বড় প্রকল্প</div></div>
+          <div class="opt" id="b4" onclick="selOpt('b4','b1','b2','b3')"><div class="opt-title">নিশ্চিত নই</div><div class="opt-sub">পরামর্শ নিন</div></div>
+        </div>
+      </div>
+      <div class="big-btn" onclick="go(1)">পরের ধাপ — কাজের বিবরণ →</div>
+    </div>`,
+
+  // Step 2 — Details
+  ()=>`
+    <div class="sbar"><span class="stime">10:04</span><div class="sdots"><div class="sd"></div><div class="sd"></div><div class="sd"></div></div></div>
+    <div class="hdr">
+      <div class="hdr-row">
+        <div class="back-btn" onclick="go(-1)"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M5 1L2 4l3 3" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="hdr-title">কাজের বিবরণ</span>
+        <span class="hdr-step">Step 2/5</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:40%"></div></div>
+    </div>
+    <div class="body">
+      <div class="inp-row">
+        <div class="inp-lbl">প্লটের আয়তন</div>
+        <div class="fake-inp filled">৩ কাঠা (প্রায় ২১৬০ বর্গফুট)</div>
+      </div>
+      <div class="inp-row">
+        <div class="inp-lbl">কত তলা বানাতে চান?</div>
+        <div style="display:flex;gap:5px">
+          ${[1,2,3,4,5,6].map((n,i)=>`<div style="flex:1;background:${i===2?'#1B6B4A':'#fff'};border:.5px solid ${i===2?'#1B6B4A':'#D0C8B8'};border-radius:7px;padding:5px 0;text-align:center;font-size:9px;color:${i===2?'#fff':'#555'};cursor:pointer">${n}</div>`).join('')}
+        </div>
+      </div>
+      <div class="inp-row">
+        <div class="inp-lbl">ঠিকানা</div>
+        <div class="fake-inp filled">মিরপুর ১০, ঢাকা</div>
+      </div>
+      <div class="inp-row">
+        <div class="inp-lbl">কাজ শুরুর সময়</div>
+        <div class="opt-grid">
+          <div class="opt sel"><div class="opt-title">যত দ্রুত সম্ভব</div></div>
+          <div class="opt"><div class="opt-title">১–৩ মাসের মধ্যে</div></div>
+          <div class="opt"><div class="opt-title">৩–৬ মাসে</div></div>
+          <div class="opt"><div class="opt-title">পরে ঠিক করব</div></div>
+        </div>
+      </div>
+      <div class="inp-row">
+        <div class="inp-lbl">অতিরিক্ত বিবরণ (ঐচ্ছিক)</div>
+        <div class="fake-inp" style="min-height:38px">বিশেষ কিছু থাকলে লিখুন…</div>
+      </div>
+      <div class="big-btn" onclick="go(1)">ঠিকাদার দেখুন →</div>
+    </div>`,
+
+  // Step 3 — Pick contractor
+  ()=>`
+    <div class="sbar"><span class="stime">10:07</span><div class="sdots"><div class="sd"></div><div class="sd"></div><div class="sd"></div></div></div>
+    <div class="hdr">
+      <div class="hdr-row">
+        <div class="back-btn" onclick="go(-1)"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M5 1L2 4l3 3" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="hdr-title">ঠিকাদার বাছাই</span>
+        <span class="hdr-step">Step 3/5</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
+    </div>
+    <div class="body">
+      <div style="font-size:7.5px;color:#888">আপনার প্রকল্পের জন্য ৩টি ম্যাচ পাওয়া গেছে</div>
+      <div class="card sel" style="border:1.5px solid #1B6B4A;cursor:pointer">
+        <div class="row" style="margin-bottom:5px">
+          <div class="avatar-sm" style="background:#FEF3C7;color:#92400E">AH</div>
+          <div style="flex:1;padding-left:6px">
+            <div style="font-size:9px;font-weight:500;color:#222">আবুল হোসেন কনস্ট্রাকশন</div>
+            <div class="star-row">★★★★★ <span style="color:#888;font-size:7px">4.9 · ৮৭ প্রকল্প</span></div>
+          </div>
+          <div class="chip">সেরা মিল</div>
+        </div>
+        <div class="tag-row" style="margin-bottom:5px">
+          <div class="chip chip-blue">NID যাচাইকৃত</div>
+          <div class="chip chip-blue">BNBC লাইসেন্স</div>
+        </div>
+        <div class="divider"></div>
+        <div class="row" style="margin-top:5px">
+          <div><div class="lbl">আনুমানিক খরচ</div><div style="font-size:9px;font-weight:500;color:#1B6B4A">৩৮–৪৫ লক্ষ</div></div>
+          <div><div class="lbl">সময়কাল</div><div style="font-size:9px;font-weight:500;color:#222">১৪–১৮ মাস</div></div>
+          <div><div class="lbl">শুরু করতে পারবেন</div><div class="chip" style="margin-top:2px">২ সপ্তাহে</div></div>
+        </div>
+      </div>
+      <div class="card" style="cursor:pointer;opacity:.85">
+        <div class="row" style="margin-bottom:4px">
+          <div class="avatar-sm" style="background:#EFF6FF;color:#0C447C">RB</div>
+          <div style="flex:1;padding-left:6px">
+            <div style="font-size:9px;font-weight:500;color:#222">রহমান বিল্ডার্স</div>
+            <div class="star-row">★★★★ <span style="color:#888;font-size:7px">4.7 · ৫৩ প্রকল্প</span></div>
+          </div>
+        </div>
+        <div class="row">
+          <div><div class="lbl">খরচ</div><div style="font-size:9px;font-weight:500;color:#222">৩৫–৪২ লক্ষ</div></div>
+          <div><div class="lbl">সময়কাল</div><div style="font-size:9px;font-weight:500;color:#222">১৬–২০ মাস</div></div>
+        </div>
+      </div>
+      <div class="card" style="cursor:pointer;opacity:.7">
+        <div class="row" style="margin-bottom:4px">
+          <div class="avatar-sm" style="background:#E1F5EE;color:#085041">SK</div>
+          <div style="flex:1;padding-left:6px">
+            <div style="font-size:9px;font-weight:500;color:#222">স্বপ্ন কনস্ট্রাকশন</div>
+            <div class="star-row">★★★★ <span style="color:#888;font-size:7px">4.5 · ৩১ প্রকল্প</span></div>
+          </div>
+        </div>
+        <div class="row">
+          <div><div class="lbl">খরচ</div><div style="font-size:9px;font-weight:500;color:#222">৩২–৩৮ লক্ষ</div></div>
+          <div><div class="lbl">সময়কাল</div><div style="font-size:9px;font-weight:500;color:#222">১৮–২২ মাস</div></div>
+        </div>
+      </div>
+      <div class="big-btn" onclick="go(1)">আবুল হোসেন কনস্ট্রাকশন বুক করুন →</div>
+    </div>`,
+
+  // Step 4 — Schedule & payment
+  ()=>`
+    <div class="sbar"><span class="stime">10:11</span><div class="sdots"><div class="sd"></div><div class="sd"></div><div class="sd"></div></div></div>
+    <div class="hdr">
+      <div class="hdr-row">
+        <div class="back-btn" onclick="go(-1)"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M5 1L2 4l3 3" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="hdr-title">সময় ও পেমেন্ট</span>
+        <span class="hdr-step">Step 4/5</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:80%"></div></div>
+    </div>
+    <div class="body">
+      <div class="sec-title">সাক্ষাতের তারিখ ঠিক করুন</div>
+      <div class="card">
+        <div class="lbl" style="margin-bottom:5px">সাইট পরিদর্শন (ফ্রি)</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px">
+          ${['সোম','মঙ্গল','বুধ'].map((d,i)=>`<div style="text-align:center;padding:5px 0;background:${i===1?'#1B6B4A':'#fff'};border:.5px solid ${i===1?'#1B6B4A':'#D0C8B8'};border-radius:7px;cursor:pointer"><div style="font-size:7px;color:${i===1?'#9FE1CB':'#888'}">${d}</div><div style="font-size:8.5px;font-weight:500;color:${i===1?'#fff':'#222'}">${i+13} জুন</div></div>`).join('')}
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:4px">
+          ${['সকাল ১০টা','বিকেল ৩টা'].map((t,i)=>`<div style="text-align:center;padding:5px;background:${i===0?'#1B6B4A':'#fff'};border:.5px solid ${i===0?'#1B6B4A':'#D0C8B8'};border-radius:7px;font-size:8px;color:${i===0?'#fff':'#555'};cursor:pointer">${t}</div>`).join('')}
+        </div>
+      </div>
+      <div class="sec-title">পেমেন্ট পদ্ধতি</div>
+      <div class="card">
+        <div class="lbl" style="margin-bottom:5px">বুকিং অগ্রিম (সম্পূর্ণ ফেরতযোগ্য)</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
+          <div style="padding:6px 8px;background:#EAF3DE;border:1.5px solid #1B6B4A;border-radius:8px;cursor:pointer">
+            <div style="font-size:8px;font-weight:500;color:#27500A">bKash</div>
+            <div style="font-size:7px;color:#3B6D11">মোবাইল ব্যাংকিং</div>
+          </div>
+          <div style="padding:6px 8px;background:#fff;border:.5px solid #D0C8B8;border-radius:8px;cursor:pointer">
+            <div style="font-size:8px;font-weight:500;color:#222">Nagad</div>
+            <div style="font-size:7px;color:#888">মোবাইল ব্যাংকিং</div>
+          </div>
+          <div style="padding:6px 8px;background:#fff;border:.5px solid #D0C8B8;border-radius:8px;cursor:pointer">
+            <div style="font-size:8px;font-weight:500;color:#222">ব্যাংক ট্রান্সফার</div>
+            <div style="font-size:7px;color:#888">BRAC / Dutch-Bangla</div>
+          </div>
+          <div style="padding:6px 8px;background:#fff;border:.5px solid #D0C8B8;border-radius:8px;cursor:pointer">
+            <div style="font-size:8px;font-weight:500;color:#222">নগদ পরে</div>
+            <div style="font-size:7px;color:#888">সাইট ভিজিটে</div>
+          </div>
+        </div>
+        <div style="margin-top:6px;background:#FEF3C7;border-radius:7px;padding:5px 8px;display:flex;align-items:center;gap:5px">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4" stroke="#D97706" stroke-width="1"/><line x1="5" y1="3" x2="5" y2="5.5" stroke="#D97706" stroke-width="1" stroke-linecap="round"/><circle cx="5" cy="7" r=".5" fill="#D97706"/></svg>
+          <span style="font-size:7px;color:#78350F">অগ্রিম মাত্র ৳৫০০ — বাকি চুক্তির পরে</span>
+        </div>
+      </div>
+      <div class="big-btn big-btn-amber" onclick="go(1)">বুকিং নিশ্চিত করুন →</div>
+    </div>`,
+
+  // Step 5 — Confirmation
+  ()=>`
+    <div class="sbar"><span class="stime">10:14</span><div class="sdots"><div class="sd"></div><div class="sd"></div><div class="sd"></div></div></div>
+    <div class="hdr" style="text-align:center;padding:10px 10px 12px">
+      <div class="hdr-title" style="text-align:center">বুকিং সম্পন্ন</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+    </div>
+    <div class="body" style="align-items:center;text-align:center">
+      <div class="success-circle">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="12" fill="#EAF3DE" stroke="#1B6B4A" stroke-width="1.5"/><path d="M8 13l4 4 6-7" stroke="#1B6B4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div style="font-size:12px;font-weight:500;color:#1B6B4A;margin-bottom:2px">বুকিং নিশ্চিত হয়েছে!</div>
+      <div style="font-size:8px;color:#888;margin-bottom:10px">বুকিং আইডি: SB-2025-04187</div>
+      <div class="card" style="width:100%;text-align:left">
+        <div style="font-size:8.5px;font-weight:500;color:#1B6B4A;margin-bottom:6px">সারসংক্ষেপ</div>
+        <div class="summary-row"><span class="sum-key">ঠিকাদার</span><span class="sum-val">আবুল হোসেন কনস্ট্রাকশন</span></div>
+        <div class="summary-row"><span class="sum-key">প্রকল্প</span><span class="sum-val">নতুন বাড়ি · ৩ তলা</span></div>
+        <div class="summary-row"><span class="sum-key">স্থান</span><span class="sum-val">মিরপুর ১০, ঢাকা</span></div>
+        <div class="summary-row"><span class="sum-key">সাইট ভিজিট</span><span class="sum-val">মঙ্গল, ১৪ জুন · সকাল ১০টা</span></div>
+        <div class="summary-row"><span class="sum-key">আনুমানিক বাজেট</span><span class="sum-val">৩৮–৪৫ লক্ষ টাকা</span></div>
+        <div class="summary-row"><span class="sum-key">অগ্রিম পেমেন্ট</span><span class="sum-val" style="color:#1B6B4A">৳৫০০ (bKash)</span></div>
+      </div>
+      <div style="background:#EAF3DE;border-radius:8px;padding:6px 10px;width:100%;text-align:left;border:.5px solid #C0DD97;margin-top:2px">
+        <div style="font-size:7.5px;color:#27500A;font-weight:500;margin-bottom:2px">পরবর্তী পদক্ষেপ</div>
+        <div style="font-size:7px;color:#3B6D11;line-height:1.5">ঠিকাদার ২৪ ঘণ্টার মধ্যে কল করবেন। সাইট ভিজিটের পর চূড়ান্ত চুক্তি হবে।</div>
+      </div>
+      <div class="big-btn" style="width:100%;margin-top:4px" onclick="sendPrompt('Design the project tracking dashboard for ShebaBondhu after booking')">প্রজেক্ট ট্র্যাক করুন →</div>
+      <div style="font-size:7.5px;color:#888;margin-top:4px;cursor:pointer" onclick="sendPrompt('What does the contractor receive after a booking is confirmed in ShebaBondhu?')">ঠিকাদারকে কী পাঠানো হয়?</div>
+    </div>`
+];
+
+let cur=0;
+function selOpt(id,...others){
+  document.getElementById(id)?.classList.add('sel');
+  others.forEach(o=>document.getElementById(o)?.classList.remove('sel'));
+}
+function renderStepper(){
+  const s=document.getElementById('stepper');
+  s.innerHTML='';
+  steps.forEach((st,i)=>{
+    const nd=document.createElement('div');nd.className='step-node';
+    nd.innerHTML=`<div class="step-circle ${i<cur?'done':i===cur?'active':''}" onclick="jump(${i})">${i<cur?'✓':i+1}</div><div class="step-lbl ${i<cur?'done':i===cur?'active':''}">${st.label.replace('\n','<br>')}</div>`;
+    s.appendChild(nd);
+    if(i<steps.length-1){const ln=document.createElement('div');ln.className='step-line '+(i<cur?'done':'');s.appendChild(ln);}
+  });
+}
+function renderScreen(){
+  document.getElementById('screen').innerHTML=screens[cur]();
+  document.getElementById('slbl').textContent=['A — প্রকল্পের ধরন','B — কাজের বিবরণ','C — ঠিকাদার বাছাই','D — সময় ও পেমেন্ট','E — বুকিং নিশ্চিত'][cur];
+  document.getElementById('prevBtn').style.opacity=cur===0?'0.3':'1';
+  document.getElementById('prevBtn').style.pointerEvents=cur===0?'none':'auto';
+  document.getElementById('nextBtn').textContent=cur===steps.length-1?'পুনরায় শুরু ↺':'পরের ধাপ →';
+}
+function go(d){
+  if(d===1&&cur===steps.length-1){cur=0;}
+  else{cur=Math.max(0,Math.min(steps.length-1,cur+d));}
+  renderStepper();renderScreen();
+}
+function jump(i){cur=i;renderStepper();renderScreen();}
+renderStepper();renderScreen();
+</script>

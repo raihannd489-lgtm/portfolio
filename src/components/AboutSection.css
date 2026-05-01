@@ -1,0 +1,152 @@
+.section-title {
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 50px;
+}
+
+.about-text {
+  padding: 30px;
+  margin-bottom: 30px;
+}
+
+.about-text h3 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: var(--accent-violet);
+}
+
+.about-text p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.personal-details {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.about-text h4 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: var(--accent-blue);
+}
+
+.about-text ul li {
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+/* Quick Stats HUD */
+.quick-stats-hud {
+  padding: 30px;
+  border: 1px solid var(--accent-blue);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.1);
+}
+
+.hud-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  text-align: center;
+}
+
+.hud-value {
+  font-size: 2.5rem;
+  font-weight: 800;
+  display: block;
+  margin-bottom: 5px;
+  font-family: 'Outfit', sans-serif;
+}
+
+.hud-label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Timeline */
+.timeline-section {
+  margin-bottom: 50px;
+}
+
+.timeline-title {
+  font-size: 2rem;
+  margin-bottom: 30px;
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--accent-violet);
+  padding-bottom: 10px;
+  display: inline-block;
+}
+
+.timeline {
+  position: relative;
+  border-left: 2px solid var(--glass-border);
+  padding-left: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.timeline-item {
+  position: relative;
+  padding: 20px;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -41px; /* 30px padding + 2px border / 2 + 10px dot radius approx */
+  top: 25px;
+  width: 20px;
+  height: 20px;
+  background: var(--accent-neon);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--accent-neon);
+}
+
+.timeline-item h4 {
+  font-size: 1.3rem;
+  margin-bottom: 5px;
+  color: var(--text-primary);
+}
+
+.timeline-date {
+  font-size: 0.9rem;
+  color: var(--accent-blue);
+  font-weight: 600;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.timeline-institution {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+.timeline-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .hud-grid {
+    grid-template-columns: 1fr;
+  }
+}

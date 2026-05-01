@@ -1,0 +1,63 @@
+.navbar {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) !important; /* Override framer motion for centering */
+  width: 90%;
+  max-width: 800px;
+  z-index: 1000;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-logo-img {
+  height: 40px;
+  width: auto;
+  border-radius: 50%; /* Make it circular if it's a profile picture */
+  border: 2px solid var(--accent-blue);
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+  transition: var(--transition);
+}
+
+.nav-logo-img:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(138, 43, 226, 0.8);
+}
+
+.nav-menu {
+  display: flex;
+  gap: 30px;
+}
+
+.nav-menu li a {
+  font-weight: 500;
+  color: var(--text-primary);
+  transition: var(--transition);
+  position: relative;
+}
+
+.nav-menu li a:hover {
+  color: var(--accent-blue);
+  text-shadow: 0 0 8px var(--accent-blue);
+}
+
+@media (max-width: 768px) {
+  .nav-menu {
+    display: none; /* Hide on mobile for now, can add hamburger later */
+  }
+}

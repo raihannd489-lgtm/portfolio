@@ -1,0 +1,209 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif}
+.root{display:flex;flex-direction:column;align-items:center;padding:1rem 0 1.5rem;gap:10px}
+.tab-row{display:flex;gap:5px;background:var(--color-background-secondary);border-radius:20px;padding:4px}
+.tab{padding:5px 13px;border-radius:16px;font-size:11px;cursor:pointer;color:var(--color-text-secondary);font-weight:500;transition:all .18s}
+.tab.on{background:#1B6B4A;color:#fff}
+.phone{background:#1a1a1a;border-radius:34px;padding:9px;width:210px}
+.screen{background:#FFF8ED;border-radius:26px;overflow:hidden;display:flex;flex-direction:column;font-family:'Segoe UI',Arial,sans-serif}
+.sbar{background:#1B6B4A;height:17px;display:flex;align-items:center;justify-content:space-between;padding:0 10px}
+.stime{font-size:7.5px;color:#fff;opacity:.9}
+.sdots{display:flex;gap:3px}
+.sd{width:4px;height:4px;border-radius:50%;background:#fff;opacity:.8}
+.note{font-size:11px;color:var(--color-text-tertiary);text-align:center;max-width:320px}
+</style>
+
+<h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">ShebaBondhu customer profile page with three sections: overview, booking history, and settings</h2>
+
+<div class="root">
+  <div class="tab-row">
+    <div class="tab on" onclick="show('overview')">ওভারভিউ</div>
+    <div class="tab" onclick="show('bookings')">বুকিং</div>
+    <div class="tab" onclick="show('settings')">সেটিংস</div>
+  </div>
+  <div class="phone"><div class="screen" id="scr"></div></div>
+  <div class="note" id="note">Section A — প্রোফাইল ওভারভিউ ও স্ট্যাটস</div>
+</div>
+
+<script>
+function sb(t){return`<div class="sbar"><span class="stime">${t}</span><div class="sdots"><div class="sd"></div><div class="sd"></div><div class="sd"></div></div></div>`}
+
+function navBar(active){
+  const items=[['হোম','M2 9L9 3l7 6v7H12v-4H6v4H2V9Z'],['খুঁজুন','M4 4 a3 3 0 1 0 6 0 a3 3 0 1 0 -6 0 M8.5 8.5 L12 12'],['চ্যাট','M1 2h14v10H9l-4 3v-3H1V2Z'],['প্রোফাইল','M6 5 a3 3 0 1 0 6 0 a3 3 0 1 0 -6 0 M2 17c0-3.31 2.69-6 6-6s6 2.69 6 6']];
+  return`<div style="background:#fff;border-top:.5px solid #E0D8C8;padding:6px 0 10px;display:flex;justify-content:space-around">
+    ${items.map(([l,p],i)=>`<div style="display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="${p}" stroke="${i===active?'#1B6B4A':'#bbb'}" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span style="font-size:6.5px;color:${i===active?'#1B6B4A':'#bbb'};font-weight:${i===active?500:400}">${l}</span>
+    </div>`).join('')}
+  </div>`;
+}
+
+function overviewScreen(){
+  const stats=[['৭','মোট বুকিং'],['৫','সম্পন্ন'],['৳৮৭,৫০০','মোট খরচ'],['৪.৮','দেওয়া রেটিং']];
+  const saved=[
+    {init:'KM',bg:'#FEF3C7',tc:'#92400E',name:'করিম মিস্ত্রী',skill:'রাজ মিস্ত্রী'},
+    {init:'RE',bg:'#EFF6FF',tc:'#0C447C',name:'রহিম ইলেকট্রিশিয়ান',skill:'কারেন্ট মিস্ত্রী'},
+  ];
+  return`${sb('১১:০০')}
+  <div style="background:#1B6B4A;padding:14px 12px 18px;text-align:center">
+    <div style="width:56px;height:56px;border-radius:50%;background:#F59E0B;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:500;color:#412402;border:2.5px solid rgba(255,255,255,.4)">রহ</div>
+    <div style="font-size:13px;font-weight:500;color:#fff">রহিমা বেগম</div>
+    <div style="font-size:8px;color:#9FE1CB;margin-top:2px">+৮৮০ ১৭১১-৪৫৬৭৮৯</div>
+    <div style="display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,.15);border-radius:10px;padding:3px 10px;margin-top:6px">
+      <div style="width:5px;height:5px;border-radius:50%;background:#F59E0B"></div>
+      <span style="font-size:7.5px;color:#fff">শেবাবন্ধু মেম্বার · ২০২৪ থেকে</span>
+    </div>
+    <div style="position:absolute;right:14px;top:50px" onclick="show('settings')" style="cursor:pointer">
+      <div style="width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;cursor:pointer" onclick="show('settings')">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="1.5" stroke="#fff" stroke-width=".9"/><path d="M6 1v1M6 10v1M1 6h1M10 6h1M2.5 2.5l.7.7M8.8 8.8l.7.7M2.5 9.5l.7-.7M8.8 3.2l.7-.7" stroke="#fff" stroke-width=".9" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+  </div>
+  <div style="padding:10px 10px 0">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:10px">
+      ${stats.map(([v,l])=>`<div style="background:#fff;border:.5px solid #E8E0D0;border-radius:9px;padding:7px 9px">
+        <div style="font-size:7.5px;color:#888;margin-bottom:2px">${l}</div>
+        <div style="font-size:13px;font-weight:500;color:#1B6B4A">${v}</div>
+      </div>`).join('')}
+    </div>
+    <div style="font-size:8.5px;font-weight:500;color:#1B6B4A;margin-bottom:6px">সেভ করা কর্মীরা</div>
+    ${saved.map(w=>`<div style="background:#fff;border:.5px solid #E8E0D0;border-radius:9px;padding:7px 9px;display:flex;align-items:center;gap:8px;margin-bottom:5px;cursor:pointer" onclick="sendPrompt('Open worker profile for ${w.name} in ShebaBondhu')">
+      <div style="width:30px;height:30px;border-radius:50%;background:${w.bg};color:${w.tc};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;flex-shrink:0">${w.init}</div>
+      <div style="flex:1"><div style="font-size:8.5px;font-weight:500;color:#222">${w.name}</div><div style="font-size:7.5px;color:#888">${w.skill}</div></div>
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M5 3l4 3-4 3" stroke="#ccc" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>`).join('')}
+    <div style="background:#EAF3DE;border:.5px solid #C0DD97;border-radius:9px;padding:8px 10px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;cursor:pointer" onclick="show('bookings')">
+      <div>
+        <div style="font-size:8px;font-weight:500;color:#27500A">সক্রিয় বুকিং আছে</div>
+        <div style="font-size:7.5px;color:#3B6D11">করিম মিস্ত্রী · কাল সকাল ৯টা</div>
+      </div>
+      <div style="background:#1B6B4A;border-radius:7px;padding:4px 9px;font-size:7.5px;color:#fff">দেখুন</div>
+    </div>
+  </div>
+  ${navBar(3)}`;
+}
+
+function bookingsScreen(){
+  const bookings=[
+    {icon:'KM',bg:'#FEF3C7',tc:'#92400E',name:'করিম মিস্ত্রী',type:'টাইলস কাজ',date:'আগামীকাল · সকাল ৯টা',status:'আসন্ন',sc:'#EAF3DE',stc:'#27500A',amt:'৳৬,০০০'},
+    {icon:'AH',bg:'#E1F5EE',tc:'#085041',name:'আবুল হোসেন কনস্ট্রাকশন',type:'বিল্ডিং ঠিকাদার',date:'১৪ জুন · সাইট ভিজিট',status:'নিশ্চিত',sc:'#EFF6FF',stc:'#0C447C',amt:'৳৩৮–৪৫ লক্ষ'},
+    {icon:'RE',bg:'#EFF6FF',tc:'#0C447C',name:'রহিম ইলেকট্রিশিয়ান',type:'ওয়্যারিং',date:'২ মে ২০২৫',status:'সম্পন্ন',sc:'#F1EFE8',stc:'#5F5E5A',amt:'৳৮,৫০০'},
+    {icon:'JP',bg:'#FBEAF0',tc:'#72243E',name:'জালাল রং মিস্ত্রী',type:'দেওয়াল রং',date:'১৫ মার্চ ২০২৫',status:'সম্পন্ন',sc:'#F1EFE8',stc:'#5F5E5A',amt:'৳১২,০০০'},
+    {icon:'SB',bg:'#E1F5EE',tc:'#085041',name:'সালাম প্লাম্বার',type:'পাইপ মেরামত',date:'১০ জানু ২০২৫',status:'বাতিল',sc:'#FCEBEB',stc:'#A32D2D',amt:'৳২,৫০০'},
+  ];
+  return`${sb('১১:০৫')}
+  <div style="background:#1B6B4A;padding:8px 10px 10px">
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:7px">
+      <div style="width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;cursor:pointer" onclick="show('overview')">
+        <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M5 1L2 4l3 3" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <span style="font-size:10px;font-weight:500;color:#fff">বুকিং ইতিহাস</span>
+    </div>
+    <div style="display:flex;gap:5px">
+      ${['সব','আসন্ন','সম্পন্ন','বাতিল'].map((f,i)=>`<div style="background:${i===0?'rgba(255,255,255,.25)':'rgba(255,255,255,.1)'};border-radius:12px;padding:3px 9px;font-size:7.5px;color:#fff;cursor:pointer">${f}</div>`).join('')}
+    </div>
+  </div>
+  <div style="padding:8px 10px;flex:1">
+    ${bookings.map(b=>`<div style="background:#fff;border:.5px solid #E8E0D0;border-radius:9px;padding:8px 9px;margin-bottom:6px;cursor:pointer" onclick="sendPrompt('Show booking details for ${b.type} with ${b.name} in ShebaBondhu')">
+      <div style="display:flex;align-items:center;gap:7px;margin-bottom:5px">
+        <div style="width:30px;height:30px;border-radius:50%;background:${b.bg};color:${b.tc};font-size:9px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0">${b.icon}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:8.5px;font-weight:500;color:#222;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.name}</div>
+          <div style="font-size:7.5px;color:#888">${b.type}</div>
+        </div>
+        <div style="background:${b.sc};color:${b.stc};font-size:6.5px;font-weight:500;padding:2px 7px;border-radius:8px;white-space:nowrap">${b.status}</div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;border-top:.5px solid #EDE6D8;padding-top:5px">
+        <div style="display:flex;align-items:center;gap:3px">
+          <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><rect x="1" y="2" width="7" height="6" rx="1" stroke="#bbb" stroke-width=".8"/><line x1="3" y1="1" x2="3" y2="3" stroke="#bbb" stroke-width=".8" stroke-linecap="round"/><line x1="6" y1="1" x2="6" y2="3" stroke="#bbb" stroke-width=".8" stroke-linecap="round"/></svg>
+          <span style="font-size:7.5px;color:#aaa">${b.date}</span>
+        </div>
+        <span style="font-size:8px;font-weight:500;color:#1B6B4A">${b.amt}</span>
+      </div>
+    </div>`).join('')}
+  </div>
+  ${navBar(3)}`;
+}
+
+function settingsScreen(){
+  const sections=[
+    {title:'অ্যাকাউন্ট',items:[
+      {icon:'M6 5 a3 3 0 1 0 6 0 a3 3 0 1 0 -6 0 M2 17c0-3.31 2.69-6 6-6s6 2.69 6 6',label:'ব্যক্তিগত তথ্য',sub:'নাম, ফোন, ইমেইল'},
+      {icon:'M3 3h12v12H3V3Z M6 7h6M6 10h4',label:'ঠিকানা',sub:'মিরপুর ১০, ঢাকা'},
+      {icon:'M9 2l2 2-9 9H2v-2L9 2Z M12 4l2 2',label:'পরিচয় যাচাই',sub:'NID যাচাইকৃত',badge:'সম্পন্ন',bc:'#EAF3DE',btc:'#27500A'},
+    ]},
+    {title:'পেমেন্ট',items:[
+      {icon:'M1 5h14v2H1V5Z M3 9h10M3 12h6',label:'পেমেন্ট পদ্ধতি',sub:'bKash ·· 6789'},
+      {icon:'M2 2h12l2 4H2L4 2Z M2 6v8h12V6',label:'লেনদেনের ইতিহাস',sub:'৭টি পেমেন্ট'},
+    ]},
+    {title:'বিজ্ঞপ্তি',items:[
+      {icon:'M9 2a5 5 0 00-5 5v2l-2 3h14l-2-3V7a5 5 0 00-5-5Z M7 16a2 2 0 004 0',label:'পুশ নোটিফিকেশন',sub:'বুকিং আপডেট',toggle:true,ton:true},
+      {icon:'M2 4h14v10H2V4Z M2 4l7 6 7-6',label:'SMS বিজ্ঞপ্তি',sub:'নিশ্চিতকরণ SMS',toggle:true,ton:false},
+    ]},
+    {title:'অ্যাপ',items:[
+      {icon:'M9 2l2 6h6l-5 4 2 6-5-4-5 4 2-6-5-4h6z',label:'ভাষা',sub:'বাংলা',arr:true},
+      {icon:'M2 2h14v14H2V2Z M5 9l3 3 5-5',label:'গোপনীয়তা নীতি',arr:true},
+      {icon:'M9 2a7 7 0 100 14A7 7 0 009 2Z M9 6v4M9 12v.5',label:'সাহায্য ও সহায়তা',arr:true},
+    ]},
+  ];
+  return`${sb('১১:১০')}
+  <div style="background:#1B6B4A;padding:8px 10px 12px">
+    <div style="display:flex;align-items:center;gap:8px">
+      <div style="width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;cursor:pointer" onclick="show('overview')">
+        <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M5 1L2 4l3 3" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div style="width:32px;height:32px;border-radius:50%;background:#F59E0B;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:#412402">রহ</div>
+      <div>
+        <div style="font-size:10px;font-weight:500;color:#fff">রহিমা বেগম</div>
+        <div style="font-size:7.5px;color:#9FE1CB">প্রোফাইল সম্পাদনা করুন</div>
+      </div>
+    </div>
+  </div>
+  <div style="padding:8px 10px;flex:1">
+    ${sections.map(sec=>`
+      <div style="font-size:8px;font-weight:500;color:#1B6B4A;margin:6px 0 4px">${sec.title}</div>
+      <div style="background:#fff;border:.5px solid #E8E0D0;border-radius:10px;overflow:hidden;margin-bottom:4px">
+        ${sec.items.map((it,idx)=>`<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;${idx<sec.items.length-1?'border-bottom:.5px solid #EDE6D8;':''}cursor:pointer">
+          <div style="width:22px;height:22px;border-radius:6px;background:#EAF3DE;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="12" height="12" viewBox="0 0 18 18" fill="none"><path d="${it.icon}" stroke="#1B6B4A" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:8.5px;color:#222">${it.label}</div>
+            <div style="font-size:7px;color:#aaa">${it.sub}</div>
+          </div>
+          ${it.badge?`<span style="background:${it.bc};color:${it.btc};font-size:6.5px;font-weight:500;padding:2px 7px;border-radius:8px">${it.badge}</span>`:''}
+          ${it.toggle?`<div style="width:28px;height:16px;border-radius:8px;background:${it.ton?'#1B6B4A':'#D0C8B8'};position:relative;cursor:pointer;flex-shrink:0"><div style="position:absolute;width:12px;height:12px;border-radius:50%;background:#fff;top:2px;${it.ton?'right:2px':'left:2px'}"></div></div>`:''}
+          ${it.arr?`<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M4 2l3 3-3 3" stroke="#ccc" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg>`:''}
+        </div>`).join('')}
+      </div>
+    `).join('')}
+    <div style="background:#FCEBEB;border:.5px solid #F7C1C1;border-radius:10px;padding:9px 12px;display:flex;align-items:center;justify-content:space-between;margin-top:4px;cursor:pointer">
+      <div style="display:flex;align-items:center;gap:7px">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2H2v10h3M9 10l4-3-4-3M13 7H5" stroke="#A32D2D" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-size:8.5px;color:#A32D2D;font-weight:500">লগআউট</span>
+      </div>
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M4 2l3 3-3 3" stroke="#F09595" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div style="text-align:center;margin-top:8px;margin-bottom:4px">
+      <span style="font-size:7px;color:#ccc">শেবাবন্ধু v2.1.4 · </span>
+      <span style="font-size:7px;color:#1B6B4A;cursor:pointer">গোপনীয়তা নীতি</span>
+    </div>
+  </div>
+  ${navBar(3)}`;
+}
+
+const views={
+  overview:{fn:overviewScreen,note:'Section A — প্রোফাইল ওভারভিউ, স্ট্যাটস ও সেভ করা কর্মীরা'},
+  bookings:{fn:bookingsScreen,note:'Section B — সব বুকিং ইতিহাস (আসন্ন, সম্পন্ন, বাতিল)'},
+  settings:{fn:settingsScreen,note:'Section C — অ্যাকাউন্ট সেটিংস, পেমেন্ট, বিজ্ঞপ্তি ও লগআউট'}
+};
+
+function show(v){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('on',['overview','bookings','settings'][i]===v));
+  document.getElementById('scr').innerHTML=views[v].fn();
+  document.getElementById('note').textContent=views[v].note;
+}
+show('overview');
+</script>

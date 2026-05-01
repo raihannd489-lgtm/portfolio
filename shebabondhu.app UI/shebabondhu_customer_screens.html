@@ -1,0 +1,298 @@
+
+<style>
+  .screens-wrap { display: flex; gap: 16px; justify-content: center; padding: 1rem 0 2rem; flex-wrap: wrap; }
+  .phone { background: #1a1a1a; border-radius: 36px; padding: 10px; width: 172px; flex-shrink: 0; }
+  .screen { background: #FFF8ED; border-radius: 28px; overflow: hidden; height: 360px; display: flex; flex-direction: column; font-family: 'Segoe UI', Arial, sans-serif; }
+  .screen-label { text-align: center; font-size: 11px; color: var(--color-text-tertiary); margin-top: 8px; }
+  .status-bar { background: #1B6B4A; height: 18px; display: flex; align-items: center; justify-content: flex-end; padding: 0 10px; gap: 4px; }
+  .status-dot { width: 4px; height: 4px; border-radius: 50%; background: #fff; opacity: 0.8; }
+  .status-time { font-size: 8px; color: #fff; opacity: 0.9; }
+
+  .header { background: #1B6B4A; padding: 8px 10px 10px; }
+  .header-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .logo-text { font-size: 11px; font-weight: 700; color: #fff; letter-spacing: -0.3px; }
+  .logo-sub { font-size: 7px; color: #9FE1CB; }
+  .loc-pill { background: rgba(255,255,255,0.18); border-radius: 10px; padding: 3px 7px; display: flex; align-items: center; gap: 3px; }
+  .loc-dot { width: 5px; height: 5px; border-radius: 50%; background: #F59E0B; }
+  .loc-text { font-size: 8px; color: #fff; }
+  .notif-circle { width: 20px; height: 20px; border-radius: 50%; background: rgba(255,255,255,0.18); display: flex; align-items: center; justify-content: center; position: relative; cursor: pointer; }
+  .notif-badge { position: absolute; top: -2px; right: -2px; width: 7px; height: 7px; border-radius: 50%; background: #F59E0B; border: 1px solid #1B6B4A; }
+
+  .search-bar { background: #fff; border-radius: 10px; padding: 6px 10px; display: flex; align-items: center; gap: 5px; cursor: pointer; }
+  .search-icon { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid #B0B0A0; position: relative; flex-shrink: 0; }
+  .search-text { font-size: 7.5px; color: #B0A898; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .scroll-content { flex: 1; overflow: hidden; padding: 8px 8px 0; }
+  .section-title { font-size: 9px; font-weight: 500; color: #1B6B4A; margin: 0 0 6px; }
+  .cat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 10px; }
+  .cat-item { background: #fff; border-radius: 8px; padding: 6px 3px; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; border: 0.5px solid #E8E0D0; }
+  .cat-item:active { background: #EAF3DE; }
+  .cat-icon { width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+  .cat-label { font-size: 6.5px; text-align: center; color: #444; line-height: 1.3; }
+
+  .banner { background: #1B6B4A; border-radius: 10px; padding: 9px 10px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+  .banner-left {}
+  .banner-title { font-size: 9px; font-weight: 500; color: #fff; margin-bottom: 2px; }
+  .banner-sub { font-size: 7px; color: #9FE1CB; }
+  .banner-btn { background: #F59E0B; border-radius: 6px; padding: 4px 8px; font-size: 7px; color: #412402; font-weight: 500; white-space: nowrap; }
+
+  .worker-list { display: flex; flex-direction: column; gap: 6px; }
+  .worker-card { background: #fff; border-radius: 8px; padding: 7px 8px; display: flex; align-items: center; gap: 7px; border: 0.5px solid #E8E0D0; cursor: pointer; }
+  .avatar { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; flex-shrink: 0; }
+  .worker-name { font-size: 8.5px; font-weight: 500; color: #222; margin-bottom: 2px; }
+  .worker-meta { font-size: 7px; color: #888; }
+  .stars { color: #F59E0B; font-size: 8px; letter-spacing: 1px; }
+  .dist-pill { background: #EAF3DE; color: #27500A; font-size: 6.5px; padding: 2px 5px; border-radius: 8px; margin-left: auto; flex-shrink: 0; }
+  .avail-dot-green { width: 6px; height: 6px; border-radius: 50%; background: #16A34A; flex-shrink: 0; }
+
+  .bottom-nav { background: #fff; border-top: 0.5px solid #E0D8C8; padding: 6px 0 10px; display: flex; justify-content: space-around; }
+  .nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; }
+  .nav-icon { width: 18px; height: 18px; }
+  .nav-label { font-size: 6.5px; color: #888; }
+  .nav-label.active { color: #1B6B4A; font-weight: 500; }
+
+  .profile-screen { background: #FFF8ED; }
+  .profile-header { background: #1B6B4A; padding: 10px 10px 16px; text-align: center; }
+  .back-row { display: flex; align-items: center; gap: 4px; margin-bottom: 8px; }
+  .back-arrow { width: 16px; height: 16px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .profile-avatar { width: 52px; height: 52px; border-radius: 50%; background: #F59E0B; margin: 0 auto 6px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 500; color: #412402; border: 2.5px solid #fff; }
+  .verified-badge { background: #E8F5EE; border-radius: 8px; padding: 2px 7px; display: inline-flex; align-items: center; gap: 3px; margin: 3px 0; }
+  .verified-dot { width: 5px; height: 5px; border-radius: 50%; background: #16A34A; }
+  .verified-text { font-size: 7px; color: #27500A; font-weight: 500; }
+  .profile-name { font-size: 12px; font-weight: 500; color: #fff; }
+  .profile-skill { font-size: 8px; color: #9FE1CB; margin-top: 2px; }
+  .profile-stars { color: #F59E0B; font-size: 10px; margin-top: 3px; }
+  .profile-reviews { font-size: 7px; color: rgba(255,255,255,0.7); }
+
+  .action-row { display: flex; gap: 6px; padding: 8px 8px; }
+  .action-btn { flex: 1; border-radius: 8px; padding: 8px 4px; font-size: 8.5px; font-weight: 500; text-align: center; cursor: pointer; border: none; }
+  .btn-call { background: #16A34A; color: #fff; }
+  .btn-msg { background: #185FA5; color: #fff; }
+
+  .profile-body { padding: 0 8px; overflow: hidden; }
+  .avail-banner { background: #EAF3DE; border-radius: 8px; padding: 5px 8px; display: flex; align-items: center; gap: 5px; margin-bottom: 8px; border: 0.5px solid #C0DD97; }
+  .avail-label { font-size: 7.5px; color: #27500A; font-weight: 500; }
+
+  .about-box { background: #fff; border-radius: 8px; padding: 7px 8px; margin-bottom: 8px; border: 0.5px solid #E8E0D0; }
+  .about-text { font-size: 7.5px; color: #555; line-height: 1.5; }
+
+  .port-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; margin-bottom: 8px; }
+  .port-tile { height: 36px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 7px; color: #888; }
+
+  .review-item { background: #fff; border-radius: 8px; padding: 6px 8px; margin-bottom: 5px; border: 0.5px solid #E8E0D0; }
+  .review-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 3px; }
+  .reviewer { font-size: 8px; font-weight: 500; color: #222; }
+  .review-date { font-size: 6.5px; color: #aaa; }
+  .review-text { font-size: 7px; color: #666; line-height: 1.4; }
+</style>
+
+<h2 class="sr-only">ShebaBondhu customer home screen and worker profile page mockups</h2>
+
+<div class="screens-wrap">
+
+  <div>
+    <div class="phone">
+      <div class="screen">
+        <div class="status-bar">
+          <span class="status-time">9:41</span>
+          <div class="status-dot"></div><div class="status-dot"></div><div class="status-dot"></div>
+        </div>
+
+        <div class="header">
+          <div class="header-row">
+            <div>
+              <div class="logo-text">শেবাবন্ধু</div>
+              <div class="logo-sub">ShebaBondhu</div>
+            </div>
+            <div class="loc-pill" onclick="sendPrompt('How should the location picker work in ShebaBondhu?')">
+              <div class="loc-dot"></div>
+              <span class="loc-text">ঢাকা, মিরপুর</span>
+            </div>
+            <div class="notif-circle" onclick="sendPrompt('What notifications should ShebaBondhu send customers?')">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1C3.34 1 2 2.34 2 4v2.5L1 7.5h8l-1-1V4C8 2.34 6.66 1 5 1Z" stroke="#fff" stroke-width="1" fill="none"/><circle cx="5" cy="9" r="0.8" fill="#fff"/></svg>
+              <div class="notif-badge"></div>
+            </div>
+          </div>
+          <div class="search-bar" onclick="sendPrompt('Design the search results screen for ShebaBondhu')">
+            <div class="search-icon"></div>
+            <span class="search-text">মিস্ত্রী বা ঠিকাদার খুঁজুন…</span>
+          </div>
+        </div>
+
+        <div class="scroll-content">
+          <div class="section-title">সার্ভিস বেছে নিন</div>
+          <div class="cat-grid">
+            <div class="cat-item" onclick="sendPrompt('Show me the Raj Mistry category screen for ShebaBondhu')">
+              <div class="cat-icon" style="background:#FEF3C7;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="9" width="12" height="5" rx="1" fill="#D97706"/><rect x="5" y="6" width="6" height="4" fill="#D97706" opacity="0.6"/><polygon points="8,2 13,6 3,6" fill="#B45309"/></svg>
+              </div>
+              <span class="cat-label">রাজ মিস্ত্রী</span>
+            </div>
+            <div class="cat-item" onclick="sendPrompt('Show the Current Mistry (Electrician) category screen')">
+              <div class="cat-icon" style="background:#EFF6FF;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><polygon points="9,2 5,9 8,9 7,14 11,7 8,7" fill="#185FA5"/></svg>
+              </div>
+              <span class="cat-label">কারেন্ট মিস্ত্রী</span>
+            </div>
+            <div class="cat-item" onclick="sendPrompt('Show the Rong Mistry (Painter) category screen')">
+              <div class="cat-icon" style="background:#FDF2F8;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3" y="11" width="10" height="2" rx="1" fill="#D4537E"/><rect x="7" y="3" width="2" height="9" rx="1" fill="#D4537E" opacity="0.7"/><circle cx="6" cy="4" r="2" fill="#D4537E" opacity="0.5"/></svg>
+              </div>
+              <span class="cat-label">রং মিস্ত্রী</span>
+            </div>
+            <div class="cat-item" onclick="sendPrompt('Show the Plumber category screen for ShebaBondhu')">
+              <div class="cat-icon" style="background:#E1F5EE;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="6" y="2" width="3" height="10" rx="1.5" fill="#0F6E56"/><rect x="3" y="9" width="10" height="3" rx="1.5" fill="#0F6E56" opacity="0.6"/></svg>
+              </div>
+              <span class="cat-label">প্লাম্বার</span>
+            </div>
+          </div>
+
+          <div class="banner" onclick="sendPrompt('Design the Full Building Contractor booking flow for ShebaBondhu')">
+            <div class="banner-left">
+              <div class="banner-title">সম্পূর্ণ বিল্ডিং ঠিকাদার</div>
+              <div class="banner-sub">নির্মাণ থেকে ফিনিশিং — এক জায়গায়</div>
+            </div>
+            <div class="banner-btn">বুক করুন</div>
+          </div>
+
+          <div class="section-title">কাছের কর্মীরা</div>
+          <div class="worker-list">
+            <div class="worker-card" onclick="sendPrompt('Open the worker profile page for Karim Mistry')">
+              <div class="avatar" style="background:#FEF3C7; color:#92400E;">KM</div>
+              <div style="flex:1; min-width:0;">
+                <div class="worker-name">করিম মিস্ত্রী</div>
+                <div class="worker-meta">রাজ মিস্ত্রী &nbsp;·&nbsp; <span class="stars">★★★★★</span> 4.9</div>
+              </div>
+              <div class="avail-dot-green"></div>
+              <div class="dist-pill">১.৩ কি.মি</div>
+            </div>
+            <div class="worker-card" onclick="sendPrompt('Open the worker profile page for Rahim Electrician')">
+              <div class="avatar" style="background:#EFF6FF; color:#0C447C;">RE</div>
+              <div style="flex:1; min-width:0;">
+                <div class="worker-name">রহিম ইলেকট্রিশিয়ান</div>
+                <div class="worker-meta">কারেন্ট মিস্ত্রী &nbsp;·&nbsp; <span class="stars">★★★★</span> 4.6</div>
+              </div>
+              <div class="avail-dot-green"></div>
+              <div class="dist-pill">২.১ কি.মি</div>
+            </div>
+            <div class="worker-card" onclick="sendPrompt('Open the worker profile for Jalal Painter')">
+              <div class="avatar" style="background:#FDF2F8; color:#72243E;">JP</div>
+              <div style="flex:1; min-width:0;">
+                <div class="worker-name">জালাল রং মিস্ত্রী</div>
+                <div class="worker-meta">রং মিস্ত্রী &nbsp;·&nbsp; <span class="stars">★★★★</span> 4.7</div>
+              </div>
+              <div style="width:6px; height:6px; border-radius:50%; background:#D97706; flex-shrink:0;"></div>
+              <div class="dist-pill" style="background:#FEF3C7; color:#78350F;">৩.৫ কি.মি</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bottom-nav">
+          <div class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 18 18" fill="none"><path d="M2 9L9 3l7 6v7H12v-4H6v4H2V9Z" fill="#1B6B4A" stroke="#1B6B4A" stroke-width="0.5"/></svg>
+            <span class="nav-label active">হোম</span>
+          </div>
+          <div class="nav-item" onclick="sendPrompt('Design the search page for ShebaBondhu')">
+            <svg class="nav-icon" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="4.5" stroke="#888" stroke-width="1.2"/><line x1="11" y1="11" x2="16" y2="16" stroke="#888" stroke-width="1.2" stroke-linecap="round"/></svg>
+            <span class="nav-label">খুঁজুন</span>
+          </div>
+          <div class="nav-item" onclick="sendPrompt('Design the chat screen for ShebaBondhu')">
+            <svg class="nav-icon" viewBox="0 0 18 18" fill="none"><path d="M2 3h14v10H9l-4 3v-3H2V3Z" stroke="#888" stroke-width="1.2" stroke-linejoin="round"/></svg>
+            <span class="nav-label">চ্যাট</span>
+          </div>
+          <div class="nav-item" onclick="sendPrompt('Design the customer profile page for ShebaBondhu')">
+            <svg class="nav-icon" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="6" r="3" stroke="#888" stroke-width="1.2"/><path d="M3 16c0-3.31 2.69-6 6-6s6 2.69 6 6" stroke="#888" stroke-width="1.2" stroke-linecap="round"/></svg>
+            <span class="nav-label">প্রোফাইল</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-label">A — Customer home screen</div>
+  </div>
+
+  <div>
+    <div class="phone">
+      <div class="screen profile-screen">
+        <div class="status-bar">
+          <span class="status-time">9:44</span>
+          <div class="status-dot"></div><div class="status-dot"></div><div class="status-dot"></div>
+        </div>
+
+        <div class="profile-header">
+          <div class="back-row">
+            <div class="back-arrow" onclick="sendPrompt('Go back to the ShebaBondhu home screen')">
+              <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M5 1L2 4l3 3" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span style="font-size:9px; color:rgba(255,255,255,0.8);">কর্মীর প্রোফাইল</span>
+          </div>
+          <div class="profile-avatar">KM</div>
+          <div class="verified-badge">
+            <div class="verified-dot"></div>
+            <span class="verified-text">NID যাচাইকৃত</span>
+          </div>
+          <div class="profile-name">করিম মিস্ত্রী</div>
+          <div class="profile-skill">সিনিয়র রাজ মিস্ত্রী · ১২ বছরের অভিজ্ঞতা</div>
+          <div class="profile-stars">★★★★★</div>
+          <div class="profile-reviews" style="font-size:7px; color:rgba(255,255,255,0.7); margin-top:1px;">4.9 · ১৪৭টি রিভিউ</div>
+        </div>
+
+        <div class="action-row">
+          <div class="action-btn btn-call" onclick="sendPrompt('What happens when a customer taps Call Now in ShebaBondhu?')">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="vertical-align:middle; margin-right:3px;"><path d="M2 1.5C2 1.5 1 3 2 5s3 4 5 4c1 0 1.5-.5 1.5-.5L7 7l-1.5.5S4 6.5 3.5 6 2 4.5 2.5 3L2 1.5Z" stroke="#fff" stroke-width="0.8" fill="none"/></svg>
+            এখনই কল করুন
+          </div>
+          <div class="action-btn btn-msg" onclick="sendPrompt('Design the chat screen between customer and worker in ShebaBondhu')">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="vertical-align:middle; margin-right:3px;"><path d="M1 2h8v5.5H5.5L3 8.5V7.5H1V2Z" stroke="#fff" stroke-width="0.8" fill="none"/></svg>
+            মেসেজ করুন
+          </div>
+        </div>
+
+        <div class="profile-body">
+          <div class="avail-banner">
+            <div class="avail-dot-green"></div>
+            <span class="avail-label">আজ উপলব্ধ — সকাল ৮টা থেকে সন্ধ্যা ৬টা</span>
+          </div>
+
+          <div class="about-box">
+            <div style="font-size:8px; font-weight:500; color:#1B6B4A; margin-bottom:4px;">পরিচিতি</div>
+            <div class="about-text">ঢাকায় ১২ বছর ধরে রাজমিস্ত্রির কাজ করছি। আবাসিক ও বাণিজ্যিক নির্মাণে দক্ষ। সময়মতো কাজ শেষ করা আমার অঙ্গীকার।</div>
+          </div>
+
+          <div style="font-size:8.5px; font-weight:500; color:#1B6B4A; margin-bottom:5px;">কাজের নমুনা</div>
+          <div class="port-grid">
+            <div class="port-tile" style="background:#F0EBE0;">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="6" width="12" height="8" rx="1" fill="#D97706" opacity="0.4"/><polygon points="8,2 14,6 2,6" fill="#B45309" opacity="0.5"/></svg>
+            </div>
+            <div class="port-tile" style="background:#E8E0D4;">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3" y="4" width="10" height="8" rx="1" fill="#888" opacity="0.4"/><rect x="5" y="8" width="6" height="4" fill="#666" opacity="0.3"/></svg>
+            </div>
+            <div class="port-tile" style="background:#EDE8E0;" onclick="sendPrompt('Show full portfolio gallery for Karim Mistry')">
+              <span style="font-size:9px; color:#888;">+১২</span>
+            </div>
+          </div>
+
+          <div style="font-size:8.5px; font-weight:500; color:#1B6B4A; margin-bottom:5px;">রিভিউ</div>
+          <div class="review-item">
+            <div class="review-top">
+              <span class="reviewer">আমিনা বেগম</span>
+              <span class="review-date">১৫ জুন ২০২৫</span>
+            </div>
+            <div style="color:#F59E0B; font-size:8px; margin-bottom:2px;">★★★★★</div>
+            <div class="review-text">কাজ অনেক সুন্দর হয়েছে, সময়মতো শেষ করেছেন।</div>
+          </div>
+          <div class="review-item">
+            <div class="review-top">
+              <span class="reviewer">রফিকুল ইসলাম</span>
+              <span class="review-date">৩ মে ২০২৫</span>
+            </div>
+            <div style="color:#F59E0B; font-size:8px; margin-bottom:2px;">★★★★</div>
+            <div class="review-text">ভালো কাজ, দাম একটু বেশি মনে হয়েছে।</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-label">B — Worker profile (customer view)</div>
+  </div>
+
+</div>
